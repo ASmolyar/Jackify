@@ -668,6 +668,7 @@ let isShuffled = false;
 let repeatMode = 'off'; // 'off', 'all', 'one'
 let currentVolume = 70;
 let progressUpdateInterval = null;
+let hasAPIError = false; // Track if YouTube API is unavailable
 
 // YouTube IFrame API ready callback
 window.onYouTubeIframeAPIReady = function() {
@@ -753,17 +754,55 @@ function updatePlayPauseButton(isPlaying) {
     }
 }
 
-// Search YouTube for a track
+// Search YouTube for a track (with caching)
 async function searchYouTube(trackName, artistName) {
+    // Create cache key from track name and artist
+    const cacheKey = `yt_${trackName.toLowerCase()}_${artistName.toLowerCase()}`.replace(/\s+/g, '_');
+
+    // Check cache first
+    try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+            console.log('Using cached video ID for:', trackName);
+            return cached;
+        }
+    } catch (e) {
+        console.warn('localStorage not available:', e);
+    }
+
+    // Not in cache, search YouTube
     const query = encodeURIComponent(`${trackName} ${artistName} official audio`);
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&maxResults=1&key=${YOUTUBE_API_KEY}`;
 
     try {
         const response = await fetch(url);
+
+        // Check for API quota/permission errors
+        if (response.status === 403) {
+            hasAPIError = true;
+            console.error('YouTube API quota exceeded or access denied');
+            return null;
+        }
+
+        if (!response.ok) {
+            console.error('YouTube API error:', response.status);
+            return null;
+        }
+
         const data = await response.json();
 
         if (data.items && data.items.length > 0) {
-            return data.items[0].id.videoId;
+            const videoId = data.items[0].id.videoId;
+
+            // Save to cache
+            try {
+                localStorage.setItem(cacheKey, videoId);
+                console.log('Cached video ID for:', trackName);
+            } catch (e) {
+                console.warn('Failed to cache video ID:', e);
+            }
+
+            return videoId;
         }
         return null;
     } catch (error) {
@@ -788,13 +827,29 @@ async function playTrack(track, queueIndex = -1) {
     const videoId = await searchYouTube(track.name, track.artist);
 
     if (!videoId) {
+        // If we have an API error, show error message and stop
+        if (hasAPIError) {
+            const info = document.getElementById('nowPlayingInfo');
+            info.innerHTML = `
+                <div class="now-playing-track">
+                    <div class="now-playing-name">YouTube API unavailable</div>
+                    <div class="now-playing-artist">Quota exceeded - try again tomorrow</div>
+                </div>
+            `;
+            console.error('YouTube API quota exceeded. Cannot play tracks.');
+            return;
+        }
+
+        // Otherwise, video not found - try next track (max 3 attempts)
         console.error('No video found for track:', track.name);
-        // Try next track
-        if (currentQueue.length > 0) {
+        if (currentQueue.length > 0 && currentQueueIndex < currentQueue.length - 1) {
             playNext();
         }
         return;
     }
+
+    // Reset API error flag on successful search
+    hasAPIError = false;
 
     // Load and play video
     ytPlayer.loadVideoById(videoId);
