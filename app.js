@@ -549,6 +549,7 @@ async function renderPlaylistDetail(p) {
                     playingPlaylist = p;
                     const validTracks = trackData.filter(t => t.name && t.name.trim() !== '');
                     currentQueue = validTracks;
+                    originalQueue = [...validTracks]; // Store original order
                     if (isShuffled) {
                         shuffleQueue();
                     }
@@ -657,6 +658,7 @@ const YOUTUBE_API_KEY = 'AIzaSyC0m1qpXOVu_RwavkPJ5ikgIYNH29go-gM';
 // Player state
 let ytPlayer = null;
 let currentQueue = [];
+let originalQueue = []; // Store original unshuffled order
 let currentQueueIndex = -1;
 let playingPlaylist = null; // Track which playlist is currently playing
 let currentTrackElement = null; // Track the currently highlighted track row
@@ -832,6 +834,7 @@ async function playPlaylist(playlist) {
         // Set the playing playlist
         playingPlaylist = playlist;
         currentQueue = tracks;
+        originalQueue = [...tracks]; // Store original order
         currentQueueIndex = 0;
 
         if (isShuffled) {
@@ -908,26 +911,49 @@ function toggleShuffle() {
     if (isShuffled) {
         btn.style.color = 'var(--accent)';
         if (currentQueue.length > 0) {
+            // Save original order if not already saved
+            if (originalQueue.length === 0) {
+                originalQueue = [...currentQueue];
+            }
             shuffleQueue();
         }
     } else {
         btn.style.color = '';
+        // Restore original order
+        if (originalQueue.length > 0) {
+            // Find current track in original queue
+            const currentTrack = currentQueue[currentQueueIndex];
+            currentQueue = [...originalQueue];
+            // Update index to match the current track position in original order
+            currentQueueIndex = currentQueue.findIndex(t => t.name === currentTrack.name && t.artist === currentTrack.artist);
+            if (currentQueueIndex === -1) currentQueueIndex = 0;
+        }
     }
 }
 
 function shuffleQueue() {
-    // Fisher-Yates shuffle, keeping current track at index 0
-    const current = currentQueue[currentQueueIndex];
-    const remaining = [...currentQueue];
-    remaining.splice(currentQueueIndex, 1);
+    // Create a shuffled order of the entire queue
+    // If a track is currently playing, keep it at position 0
+    const shuffled = [...currentQueue];
 
-    for (let i = remaining.length - 1; i > 0; i--) {
+    // Fisher-Yates shuffle
+    for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [remaining[i], remaining[j]] = [remaining[j], remaining[i]];
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
-    currentQueue = [current, ...remaining];
-    currentQueueIndex = 0;
+    // If there's a current track playing, move it to the front
+    if (currentQueueIndex >= 0 && currentQueueIndex < currentQueue.length) {
+        const currentTrack = currentQueue[currentQueueIndex];
+        const shuffledIndex = shuffled.findIndex(t => t.name === currentTrack.name && t.artist === currentTrack.artist);
+        if (shuffledIndex > 0) {
+            // Swap current track to position 0
+            [shuffled[0], shuffled[shuffledIndex]] = [shuffled[shuffledIndex], shuffled[0]];
+        }
+        currentQueueIndex = 0;
+    }
+
+    currentQueue = shuffled;
 }
 
 function handleTrackEnd() {
@@ -1023,37 +1049,6 @@ document.getElementById('volumeTrack').addEventListener('click', (e) => {
     setVolume(percent);
 });
 
-// Modify track row clicks to play tracks
-function makeTrackRowsClickable() {
-    const trackRows = document.querySelectorAll('.track-row');
-    trackRows.forEach((row, index) => {
-        row.style.cursor = 'pointer';
-        row.addEventListener('click', async () => {
-            if (currentQueue.length === 0) return;
-            currentQueueIndex = index;
-            playTrack(currentQueue[index], index);
-        });
-    });
-}
-
-// Override the renderPlaylistDetail to add track click handlers
-const originalRenderPlaylistDetail = renderPlaylistDetail;
-renderPlaylistDetail = async function(p) {
-    await originalRenderPlaylistDetail(p);
-
-    // Load queue for this playlist
-    try {
-        const csvFile = getCSVFilename(p.name);
-        const resp = await fetch('csvs/' + encodeURIComponent(csvFile));
-        if (resp.ok) {
-            const text = await resp.text();
-            currentQueue = parseCSV(text);
-            makeTrackRowsClickable();
-        }
-    } catch (e) {
-        console.error('Error loading tracks:', e);
-    }
-};
 
 // Modify the large play button to play the playlist
 const setupPlaylistPlayButton = () => {
