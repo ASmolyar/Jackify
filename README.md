@@ -6,17 +6,11 @@ A Spotify-inspired web music player that plays Jack's playlists using YouTube in
 
 **Jack Davis Dutton** (July 12, 2005 – December 18, 2025)
 
-This project is dedicated to the memory of Jack Dutton, my best friend, who tragically passed away on December 18, 2025, in a plane crash in Statesville, North Carolina, along with his father Dennis.
+This project is dedicated to Jack Dutton, my best friend since 4th grade, who passed away on December 18, 2025.
 
-Jack was a junior in Auburn University's Professional Flight program, where he had just earned his Instrument-Rated Private Pilot ASEL certification in fall 2025. He owned his own aircraft and lived his passion for aviation every day. When he wasn't in the skies, Jack was making the Dean's List, working as a barista at Well Red Coffee and Bookstore, and bringing joy to everyone around him as a member of Alpha Sigma Phi fraternity.
+**Jackify preserves Jack's musical journey**—every playlist he curated, every song he discovered, every moment of his life captured through music. This is a living memorial to someone I miss dearly, a friend who could light up any room and make everyone around him feel a little brighter.
 
-Friends consistently described Jack as someone who could "light up a room the second he walked in." He had an incredible gift for connecting with people—he could strike up a conversation with anyone and have them laughing within minutes. His charisma, quick wit, and genuine kindness touched countless lives in his 20 years.
-
-**Jackify preserves Jack's musical journey**—every playlist he curated, every song he discovered, every moment of his life captured through music. This isn't just a web player; it's a living memorial to a friend who made every moment brighter, every conversation more meaningful, and every room more full of life.
-
-Jack had this remarkable way of balancing ambition with humility, of pursuing his dreams while always putting others first. Through this project, his music collection lives on, and so does the memory of someone truly special.
-
-*"War Eagle, Jack. You'll always be remembered."*
+Through this project, his music lives on.
 
 ## Features
 
@@ -122,12 +116,3 @@ Built with love and remembrance by his best friend.
 ## Repository
 
 [https://github.com/ASmolyar/Jackify](https://github.com/ASmolyar/Jackify)
-
----
-
-### Sources
-
-Information about Jack Dutton's life and legacy:
-- [In memory of Jack Dutton - The Auburn Plainsman](https://www.theplainsman.com/article/2026/02/in-memory-of-jack-dutton)
-- [Jack Davis Dutton Obituary - Legacy.com](https://www.legacy.com/us/obituaries/name/jack-dutton-obituary?id=60350507)
-- [Jack Dutton Obituary - Ingram Services Inc](https://www.ingramservicesinc.com/memorials/jack-dutton/5669413/)
