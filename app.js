@@ -708,31 +708,64 @@ let videoMappings = {}; // Pre-generated video mappings
 
 // YouTube IFrame API ready callback
 window.onYouTubeIframeAPIReady = function() {
+    console.log('YouTube IFrame API ready');
     initYouTubePlayer();
 };
 
-function initYouTubePlayer() {
-    // Single player instance
-    ytPlayer = new YT.Player('ytPlayer', {
-        height: '100%',
-        width: '100%',
-        playerVars: {
-            autoplay: 0,
-            controls: 0,
-            modestbranding: 1,
-            rel: 0,
-            showinfo: 0,
-            fs: 0,
-            playsinline: 1,
-            disablekb: 1,
-            iv_load_policy: 3
-        },
-        events: {
-            onReady: onPlayerReady,
-            onStateChange: onPlayerStateChange
-        }
-    });
+// Check if YouTube API is already loaded
+function checkYouTubeAPI() {
+    if (typeof YT !== 'undefined' && YT.Player) {
+        console.log('YouTube API already loaded, initializing player');
+        initYouTubePlayer();
+    } else {
+        console.log('Waiting for YouTube API to load...');
+        // Set a timeout to retry initialization if the API doesn't load
+        setTimeout(() => {
+            if (!ytPlayer && typeof YT !== 'undefined' && YT.Player) {
+                console.log('Retry: YouTube API loaded, initializing player');
+                initYouTubePlayer();
+            } else if (!ytPlayer) {
+                console.error('YouTube API failed to load after timeout');
+            }
+        }, 3000);
+    }
 }
+
+function initYouTubePlayer() {
+    if (ytPlayer) {
+        console.log('Player already initialized');
+        return;
+    }
+
+    try {
+        // Single player instance
+        ytPlayer = new YT.Player('ytPlayer', {
+            height: '100%',
+            width: '100%',
+            playerVars: {
+                autoplay: 0,
+                controls: 0,
+                modestbranding: 1,
+                rel: 0,
+                showinfo: 0,
+                fs: 0,
+                playsinline: 1,
+                disablekb: 1,
+                iv_load_policy: 3
+            },
+            events: {
+                onReady: onPlayerReady,
+                onStateChange: onPlayerStateChange
+            }
+        });
+        console.log('YouTube player initialized successfully');
+    } catch (error) {
+        console.error('Error initializing YouTube player:', error);
+    }
+}
+
+// Check on page load
+document.addEventListener('DOMContentLoaded', checkYouTubeAPI);
 
 function onPlayerReady(event) {
     event.target.setVolume(currentVolume);
