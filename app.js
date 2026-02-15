@@ -832,7 +832,8 @@ function updateNowPlayingInfo(track) {
     // Update expanded view if it's showing
     if (isExpanded) {
         updateExpandedViewContent();
-        expandedView.style.background = `linear-gradient(180deg, ${color} 0%, var(--bg-elevated) 40%)`;
+        const colors = getExpandedGradientColors(track);
+        expandedView.style.background = `linear-gradient(180deg, ${colors.top} 0%, ${colors.bottom} 100%)`;
     }
 }
 
@@ -849,6 +850,24 @@ function getNowPlayingColor(track) {
     const s = 60 + (Math.abs(hash >> 8) % 20);
     const l = 15 + (Math.abs(hash >> 16) % 10);
     return `hsl(${h}, ${s}%, ${l}%)`;
+}
+
+// Generate gradient colors for expanded view (two similar shades)
+function getExpandedGradientColors(track) {
+    let hash = 0;
+    const seed = track.name + track.album;
+    for (let i = 0; i < seed.length; i++) {
+        hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    const s = 60 + (Math.abs(hash >> 8) % 20);
+    const l = 15 + (Math.abs(hash >> 16) % 10);
+
+    // Two similar shades - top brighter, bottom slightly darker
+    return {
+        top: `hsl(${h}, ${s}%, ${l + 5}%)`,
+        bottom: `hsl(${h}, ${s}%, ${l - 5}%)`
+    };
 }
 
 // Play playlist
@@ -1120,9 +1139,9 @@ function toggleExpandedView() {
         expandedView.classList.remove('hidden');
 
         // Move YouTube iframe to expanded container
-        const ytPlayerElement = document.getElementById('ytPlayer');
-        if (ytPlayerElement) {
-            expandedVideoContainer.appendChild(ytPlayerElement);
+        const ytPlayerIframe = ytPlayer ? ytPlayer.getIframe() : null;
+        if (ytPlayerIframe) {
+            expandedVideoContainer.appendChild(ytPlayerIframe);
         }
 
         // Update expanded view content
@@ -1131,17 +1150,17 @@ function toggleExpandedView() {
         // Set background color to match now playing bar
         if (currentQueue.length > 0 && currentQueueIndex >= 0) {
             const track = currentQueue[currentQueueIndex];
-            const color = getNowPlayingColor(track);
-            expandedView.style.background = `linear-gradient(180deg, ${color} 0%, var(--bg-elevated) 40%)`;
+            const colors = getExpandedGradientColors(track);
+            expandedView.style.background = `linear-gradient(180deg, ${colors.top} 0%, ${colors.bottom} 100%)`;
         }
     } else {
         // Hide expanded view
         expandedView.classList.add('hidden');
 
         // Move YouTube iframe back to compact bar
-        const ytPlayerElement = document.getElementById('ytPlayer');
-        if (ytPlayerElement) {
-            nowPlayingVideoOriginal.appendChild(ytPlayerElement);
+        const ytPlayerIframe = ytPlayer ? ytPlayer.getIframe() : null;
+        if (ytPlayerIframe) {
+            nowPlayingVideoOriginal.appendChild(ytPlayerIframe);
         }
     }
 }

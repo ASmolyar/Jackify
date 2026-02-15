@@ -1480,12 +1480,17 @@ body {
     .player-controls {
         position: absolute;
         right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
+        top: 20px;
+        transform: none;
         gap: 0;
     }
 
     .control-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .control-btn.play-btn {
         width: 32px;
         height: 32px;
     }
