@@ -8,19 +8,10 @@ A Spotify-inspired web music player that plays Jack's playlists using YouTube in
 
 This project is dedicated to Jack Dutton, my best friend since 4th grade, who passed away on December 18, 2025.
 
-**Jackify preserves Jack's musical journey**—every playlist he curated, every song he discovered, every moment of his life captured through music. This is a living memorial to someone I miss dearly, a friend who could light up any room and make everyone around him feel a little brighter.
+**Jackify**— Jackify is a project to preserve the final state of his spotify account. Music was a huge part of who Jack was, and a huge part of what we shared. I'll be missing him.
 
 Through this project, his music lives on.
 
-## Features
-
-- **Spotify-Style Interface** - Clean, modern UI inspired by Spotify's design
-- **YouTube Playback** - Integrated YouTube player for music streaming
-- **Album Artwork** - Display album covers for all tracks using Vercel Blob storage
-- **Playlist Filtering** - Filter between "All", "Playlists", and "Made for you" categories
-- **Date Tracking** - See when Jack added each song to playlists
-- **Player Controls** - Full playback controls including shuffle, repeat, progress bar, and volume
-- **Multi-Artist Support** - Properly formatted artist names for collaborative tracks
 
 ## Technology Stack
 
@@ -94,24 +85,19 @@ To enable auto-deployment from GitHub:
 ### Album Artwork
 Album art is stored in Vercel Blob storage and fetched using the track's Spotify URI. Local fallback images are used when blob storage is unavailable.
 
-### YouTube Player Customization
-The embedded YouTube player is scaled and cropped to hide branding elements (logo, profile picture) for a cleaner viewing experience.
+### YouTube Player
+The embedded YouTube player is how the music is played without needing a license or subscription.
 
 ### Playlist Filtering
 Three-tier filtering system allows users to view all content, only custom playlists, or Spotify-generated "Made for you" content.
-
-## Browser Compatibility
-
-Tested and working on modern browsers including:
-- Chrome/Edge (recommended)
-- Firefox
-- Safari
 
 ## About This Project
 
 This is a personal memorial project created to honor and preserve Jack Dutton's music collection. It serves as a digital archive of his playlists and a celebration of his love for music.
 
-Built with love and remembrance by his best friend.
+Built with love and remembrance by his 4th grade buddy, Aaron Smolyar.
+
+Love you Jackiefwend.
 
 ## Repository
 
