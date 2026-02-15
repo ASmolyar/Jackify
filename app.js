@@ -15,6 +15,17 @@ fetch('blob-config.json')
         console.log('Using local images (blob-config.json not found)');
     });
 
+// Load video mappings if available
+fetch('video-mappings.json')
+    .then(res => res.json())
+    .then(mappings => {
+        videoMappings = mappings;
+        console.log(`Loaded ${Object.keys(videoMappings).length} video mappings`);
+    })
+    .catch(() => {
+        console.log('No video mappings found, will use YouTube API');
+    });
+
 // Helper to get image URL (blob or local)
 function getImageUrl(path) {
     if (!path) return '';
@@ -669,6 +680,7 @@ let repeatMode = 'off'; // 'off', 'all', 'one'
 let currentVolume = 70;
 let progressUpdateInterval = null;
 let hasAPIError = false; // Track if YouTube API is unavailable
+let videoMappings = {}; // Pre-generated video mappings
 
 // YouTube IFrame API ready callback
 window.onYouTubeIframeAPIReady = function() {
@@ -759,7 +771,13 @@ async function searchYouTube(trackName, artistName) {
     // Create cache key from track name and artist
     const cacheKey = `yt_${trackName.toLowerCase()}_${artistName.toLowerCase()}`.replace(/\s+/g, '_');
 
-    // Check cache first
+    // Check pre-generated mappings first
+    if (videoMappings[cacheKey]) {
+        console.log('Using pre-mapped video ID for:', trackName);
+        return videoMappings[cacheKey];
+    }
+
+    // Check localStorage cache second
     try {
         const cached = localStorage.getItem(cacheKey);
         if (cached) {
@@ -770,7 +788,7 @@ async function searchYouTube(trackName, artistName) {
         console.warn('localStorage not available:', e);
     }
 
-    // Not in cache, search YouTube
+    // Not in mappings or cache, search YouTube
     const query = encodeURIComponent(`${trackName} ${artistName} official audio`);
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&maxResults=1&key=${YOUTUBE_API_KEY}`;
 
