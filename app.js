@@ -37,7 +37,7 @@ function getImageUrl(path) {
 
 // Playlist data
 const playlists = [
-    { name: "Liked Songs", url: "https://open.spotify.com/collection/tracks", img: null, songs: 241, date: "2025-12-18", subtitle: null, isLiked: true },
+    { name: "Liked Songs", url: "https://open.spotify.com/collection/tracks", img: "pfps/Liked Songs.jpeg", songs: 241, date: "2025-12-18", subtitle: null },
     { name: "On Repeat", url: "https://open.spotify.com/playlist/49YeV4mj1uXMMi8FIu97V7", img: "pfps/On Repeat.jpeg", songs: 30, date: "2025-12-18", subtitle: null, description: "This playlist was collected posthumously.", category: "madeForYou", author: "Spotify" },
     { name: "Repeat Rewind", url: "https://open.spotify.com/playlist/2H4u1iNige1NX86pEWBcPv", img: "pfps/Repeat Rewind.jpg", songs: 30, date: "2025-12-18", subtitle: null, description: "This playlist was collected posthumously.", category: "madeForYou", author: "Spotify" },
     { name: "Your Top Songs 2022", url: "https://open.spotify.com/playlist/0yhPPOU0ZTLELil0deZEiH", img: "pfps/Your Top Songs 2022.jpeg", songs: 101, date: "2022-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
@@ -362,15 +362,11 @@ function renderPlaylistGrid() {
         card.className = 'playlist-card';
         card.onclick = () => openPlaylist(p);
 
-        const imgHtml = p.isLiked
-            ? `<div class="card-img liked-songs-gradient" style="width:100%;aspect-ratio:1;border-radius:6px;display:flex;align-items:flex-end;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.5)">
-                <svg width="32" height="32" viewBox="0 0 16 16" fill="#fff"><path d="M15.724 4.22A4.313 4.313 0 0 0 12.192.814a4.269 4.269 0 0 0-3.622 1.13.837.837 0 0 1-1.14 0 4.272 4.272 0 0 0-6.38 5.602l5.4 7.4a1.467 1.467 0 0 0 2.1 0l5.4-7.4a4.3 4.3 0 0 0 1.774-3.326z"/></svg>
-               </div>`
-            : p.img
-                ? `<img class="card-img" src="${encodeImgPath(p.img)}" alt="${escHtml(p.name)}" onerror="handleImgError(this)">`
-                : `<div class="card-img" style="background:#333;display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:1;border-radius:6px;">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="#b3b3b3"><path d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v12.167a3.5 3.5 0 1 1-3.5-3.5H6V3z"/></svg>
-                   </div>`;
+        const imgHtml = p.img
+            ? `<img class="card-img" src="${encodeImgPath(p.img)}" alt="${escHtml(p.name)}" onerror="handleImgError(this)">`
+            : `<div class="card-img" style="background:#333;display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:1;border-radius:6px;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="#b3b3b3"><path d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v12.167a3.5 3.5 0 1 1-3.5-3.5H6V3z"/></svg>
+               </div>`;
 
         const author = p.author || 'Jack Dutton';
         const subtitleText = p.subtitle || `Playlist \u00B7 ${author}`;
@@ -411,11 +407,7 @@ function renderSidebar() {
         item.className = 'library-item' + (currentPlaylist === p ? ' active' : '');
         item.onclick = () => openPlaylist(p);
 
-        const imgHtml = p.isLiked
-            ? `<div class="library-item-img liked-songs-gradient" style="display:flex;align-items:center;justify-content:center;border-radius:4px;">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="#fff"><path d="M15.724 4.22A4.313 4.313 0 0 0 12.192.814a4.269 4.269 0 0 0-3.622 1.13.837.837 0 0 1-1.14 0 4.272 4.272 0 0 0-6.38 5.602l5.4 7.4a1.467 1.467 0 0 0 2.1 0l5.4-7.4a4.3 4.3 0 0 0 1.774-3.326z"/></svg>
-               </div>`
-            : `<img class="library-item-img" src="${p.img ? encodeImgPath(p.img) : ''}" alt="" onerror="handleImgError(this)">`;
+        const imgHtml = `<img class="library-item-img" src="${p.img ? encodeImgPath(p.img) : ''}" alt="" onerror="handleImgError(this)">`;
 
         const author = p.author || 'Jack Dutton';
         item.innerHTML = `
@@ -471,15 +463,11 @@ async function renderPlaylistDetail(p) {
 
     const titleClass = p.name.length > 30 ? 'very-long-title' : p.name.length > 18 ? 'long-title' : '';
 
-    const imgHtml = p.isLiked
-        ? `<div class="playlist-detail-img liked-songs-gradient" style="display:flex;align-items:center;justify-content:center;">
-            <svg width="64" height="64" viewBox="0 0 16 16" fill="#fff"><path d="M15.724 4.22A4.313 4.313 0 0 0 12.192.814a4.269 4.269 0 0 0-3.622 1.13.837.837 0 0 1-1.14 0 4.272 4.272 0 0 0-6.38 5.602l5.4 7.4a1.467 1.467 0 0 0 2.1 0l5.4-7.4a4.3 4.3 0 0 0 1.774-3.326z"/></svg>
-           </div>`
-        : p.img
-            ? `<img class="playlist-detail-img" src="${encodeImgPath(p.img)}" alt="${escHtml(p.name)}" onerror="handleImgError(this)">`
-            : `<div class="playlist-detail-img" style="background:#333;display:flex;align-items:center;justify-content:center;">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="#b3b3b3"><path d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v12.167a3.5 3.5 0 1 1-3.5-3.5H6V3z"/></svg>
-               </div>`;
+    const imgHtml = p.img
+        ? `<img class="playlist-detail-img" src="${encodeImgPath(p.img)}" alt="${escHtml(p.name)}" onerror="handleImgError(this)">`
+        : `<div class="playlist-detail-img" style="background:#333;display:flex;align-items:center;justify-content:center;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="#b3b3b3"><path d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v12.167a3.5 3.5 0 1 1-3.5-3.5H6V3z"/></svg>
+           </div>`;
 
     const descHtml = p.description
         ? `<div class="playlist-description">${escHtml(p.description)}</div>`
