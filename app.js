@@ -989,7 +989,8 @@ function updateNowPlayingInfo(track) {
         const localPath = `album-art/${track.trackId}.jpg`;
         albumArt.src = localPath;
         albumArt.alt = track.album;
-        // Don't set inline display - let CSS handle it (hidden on desktop, shown on mobile)
+        // Remove inline display style to let CSS control visibility
+        albumArt.style.display = '';
     }
 
     // Update now playing bar color
