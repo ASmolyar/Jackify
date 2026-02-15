@@ -594,9 +594,9 @@ const YOUTUBE_API_KEY = 'AIzaSyC0m1qpXOVu_RwavkPJ5ikgIYNH29go-gM';
 
 // Player state
 let ytPlayer = null;
-let ytPlayerExpanded = null;
 let currentQueue = [];
 let currentQueueIndex = -1;
+let isVideoPoppedOut = false;
 let isShuffled = false;
 let repeatMode = 'off'; // 'off', 'all', 'one'
 let currentVolume = 70;
@@ -609,7 +609,7 @@ window.onYouTubeIframeAPIReady = function() {
 };
 
 function initYouTubePlayer() {
-    // Main player (small in now-playing bar)
+    // Single player instance
     ytPlayer = new YT.Player('ytPlayer', {
         height: '100%',
         width: '100%',
@@ -629,23 +629,6 @@ function initYouTubePlayer() {
             onStateChange: onPlayerStateChange
         }
     });
-
-    // Expanded player
-    ytPlayerExpanded = new YT.Player('ytPlayerExpanded', {
-        height: '100%',
-        width: '100%',
-        playerVars: {
-            autoplay: 0,
-            controls: 1,
-            modestbranding: 1,
-            rel: 0,
-            showinfo: 0,
-            playsinline: 1,
-            iv_load_policy: 3,
-            cc_load_policy: 0,
-            fs: 1
-        }
-    });
 }
 
 function onPlayerReady(event) {
@@ -657,18 +640,9 @@ function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
         updatePlayPauseButton(true);
         startProgressUpdate();
-        // Sync expanded player if active
-        if (isVideoExpanded && ytPlayerExpanded) {
-            const time = ytPlayer.getCurrentTime();
-            ytPlayerExpanded.seekTo(time, true);
-            ytPlayerExpanded.playVideo();
-        }
     } else if (event.data === YT.PlayerState.PAUSED) {
         updatePlayPauseButton(false);
         stopProgressUpdate();
-        if (isVideoExpanded && ytPlayerExpanded) {
-            ytPlayerExpanded.pauseVideo();
-        }
     } else if (event.data === YT.PlayerState.ENDED) {
         handleTrackEnd();
     }
@@ -733,10 +707,6 @@ async function playTrack(track, queueIndex = -1) {
 
     // Load and play video
     ytPlayer.loadVideoById(videoId);
-
-    if (isVideoExpanded && ytPlayerExpanded) {
-        ytPlayerExpanded.loadVideoById(videoId);
-    }
 
     // Update now playing info
     updateNowPlayingInfo(track);
@@ -929,9 +899,6 @@ function seekTo(percent) {
     const total = ytPlayer.getDuration();
     if (total > 0) {
         ytPlayer.seekTo(total * percent);
-        if (isVideoExpanded && ytPlayerExpanded) {
-            ytPlayerExpanded.seekTo(total * percent);
-        }
     }
 }
 
@@ -940,9 +907,6 @@ function setVolume(percent) {
     currentVolume = percent;
     if (ytPlayer) {
         ytPlayer.setVolume(currentVolume);
-    }
-    if (ytPlayerExpanded) {
-        ytPlayerExpanded.setVolume(currentVolume);
     }
     updateVolumeDisplay();
 }
@@ -968,33 +932,34 @@ function updateVolumeDisplay() {
     }
 }
 
-// Video expand/collapse
+// Video pop-out toggle
 function toggleVideoExpand() {
-    const overlay = document.getElementById('videoOverlay');
-    isVideoExpanded = !isVideoExpanded;
+    const pip = document.getElementById('videoPip');
+    const pipContent = document.getElementById('pipContent');
+    const nowPlayingVideo = document.getElementById('nowPlayingVideo');
+    const placeholder = document.getElementById('videoPlaceholder');
+    const ytPlayerDiv = document.getElementById('ytPlayer');
+    const expandBtn = document.getElementById('expandVideoBtn');
+    const expandIcon = document.getElementById('expandIcon');
 
-    if (isVideoExpanded) {
-        overlay.classList.remove('hidden');
-        // Sync expanded player
-        if (ytPlayer && ytPlayerExpanded) {
-            const videoId = ytPlayer.getVideoData().video_id;
-            const time = ytPlayer.getCurrentTime();
-            const state = ytPlayer.getPlayerState();
+    isVideoPoppedOut = !isVideoPoppedOut;
 
-            ytPlayerExpanded.loadVideoById({
-                videoId: videoId,
-                startSeconds: time
-            });
-
-            if (state === YT.PlayerState.PLAYING) {
-                ytPlayerExpanded.playVideo();
-            }
-        }
+    if (isVideoPoppedOut) {
+        // Pop out: move player to PIP modal
+        pip.classList.remove('hidden');
+        pipContent.appendChild(ytPlayerDiv);
+        placeholder.classList.remove('hidden');
+        expandBtn.title = 'Pop in video';
+        // Change icon to "compress" icon
+        expandIcon.innerHTML = '<path d="M5.5 0A.75.75 0 0 1 6.25.75v2.69l3.72-3.72a.75.75 0 1 1 1.06 1.06L7.31 4.5h2.69a.75.75 0 0 1 0 1.5h-4A.75.75 0 0 1 5.25 5.25v-4A.75.75 0 0 1 5.5 0zM10.5 16a.75.75 0 0 1-.75-.75v-2.69l-3.72 3.72a.75.75 0 1 1-1.06-1.06l3.72-3.72H6a.75.75 0 0 1 0-1.5h4a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-.75.75z"/>';
     } else {
-        overlay.classList.add('hidden');
-        if (ytPlayerExpanded) {
-            ytPlayerExpanded.pauseVideo();
-        }
+        // Pop in: move player back to now playing bar
+        pip.classList.add('hidden');
+        nowPlayingVideo.insertBefore(ytPlayerDiv, placeholder);
+        placeholder.classList.add('hidden');
+        expandBtn.title = 'Pop out video';
+        // Change icon back to "expand" icon
+        expandIcon.innerHTML = '<path d="M6.53 9.47a.75.75 0 0 1 0 1.06l-3.72 3.72H5.5a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75v-4a.75.75 0 0 1 1.5 0v2.69l3.72-3.72a.75.75 0 0 1 1.06 0zm2.94-2.94a.75.75 0 0 1 0-1.06l3.72-3.72H10.5a.75.75 0 1 1 0-1.5h4a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0V3.31l-3.72 3.72a.75.75 0 0 1-1.06 0z"/>';
     }
 }
 
@@ -1006,7 +971,7 @@ document.getElementById('shuffleBtn').addEventListener('click', toggleShuffle);
 document.getElementById('repeatBtn').addEventListener('click', toggleRepeat);
 document.getElementById('volumeBtn').addEventListener('click', toggleMute);
 document.getElementById('expandVideoBtn').addEventListener('click', toggleVideoExpand);
-document.getElementById('closeVideoOverlay').addEventListener('click', toggleVideoExpand);
+document.getElementById('closePip').addEventListener('click', toggleVideoExpand);
 
 // Progress bar click
 document.getElementById('progressTrack').addEventListener('click', (e) => {

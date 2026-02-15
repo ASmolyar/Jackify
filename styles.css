@@ -929,32 +929,62 @@ body {
     text-decoration: underline;
 }
 
-/* Video Overlay (Expanded View) */
-.video-overlay {
+/* PIP Video Modal */
+.video-pip {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-}
-
-.video-overlay-content {
-    position: relative;
-    width: 90%;
-    max-width: 1280px;
-    aspect-ratio: 16/9;
-    background: #000;
+    bottom: 90px;
+    right: 20px;
+    width: 400px;
+    background: var(--bg-elevated);
     border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
     overflow: hidden;
 }
 
-.video-overlay-content iframe {
+.video-pip-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.video-pip-title {
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.video-pip-close {
+    background: none;
+    border: none;
+    color: var(--text-subdued);
+    font-size: 20px;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    padding: 0;
+}
+
+.video-pip-close:hover {
+    color: var(--text-primary);
+}
+
+.video-pip-content {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+}
+
+.video-pip-content iframe,
+.video-pip-content > div {
     position: absolute;
     top: 0;
     left: 0;
@@ -962,26 +992,16 @@ body {
     height: 100%;
 }
 
-.video-overlay-close {
-    position: absolute;
-    top: -40px;
-    right: 0;
-    background: none;
-    border: none;
-    color: var(--text-primary);
-    font-size: 36px;
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
+.video-placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.2s;
-    z-index: 10;
-}
-
-.video-overlay-close:hover {
-    opacity: 0.7;
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /* Enhanced Progress Bar */
@@ -1040,8 +1060,10 @@ body {
         height: 45px;
     }
 
-    .video-overlay-content {
-        width: 95%;
+    .video-pip {
+        width: 320px;
+        right: 10px;
+        bottom: 80px;
     }
 }
 
