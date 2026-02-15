@@ -42,9 +42,9 @@ const playlists = [
     { name: "SAE", url: "https://open.spotify.com/playlist/3aq7FULzFT8znmlWODqv2L", img: "pfps/SAE.jpeg", songs: 1, date: "2025-05-26", subtitle: null },
     { name: "junior", url: "https://open.spotify.com/playlist/4W3cOeADPWyi1mltiT1FAL", img: "pfps/junior.jpeg", songs: 34, date: "2022-09-14", subtitle: "Bruh what even was September\u{1F602}\u{1F602}" },
     { name: "Rowing Trip '21", url: "https://open.spotify.com/playlist/6GN9yE7qAD3B0vgOnYCUqM", img: "pfps/Rowing Trip '21.jpeg", songs: 54, date: "2022-01-08", subtitle: "getting gunned down in the streets of miami" },
-    { name: "\u201Ccrackle barrel \u201D", url: "https://open.spotify.com/playlist/6LTDwWwkvAeuCTunkqqLUX", img: "pfps/\"crackle barrel \".jpeg", songs: 26, date: "2023-10-11", subtitle: null },
+    { name: "\u201Ccrackle barrel \u201D", url: "https://open.spotify.com/playlist/6LTDwWwkvAeuCTunkqqLUX", img: "pfps/\u201Ccrackle barrel \u201D.jpeg", songs: 26, date: "2023-10-11", subtitle: null },
     { name: "Old summer", url: "https://open.spotify.com/playlist/62w94hFNNqm2lw74LO70Pg", img: "pfps/Old summer.jpeg", songs: 26, date: "2023-03-19", subtitle: null },
-    { name: "driving off", url: "https://open.spotify.com/playlist/0ICnWhUNvPhHY9zBWhgFAG", img: "pfps/ driving off.jpeg", songs: 37, date: "2023-04-28", subtitle: null },
+    { name: "driving off", url: "https://open.spotify.com/playlist/0ICnWhUNvPhHY9zBWhgFAG", img: "pfps/driving off.jpeg", songs: 37, date: "2023-04-28", subtitle: null },
     { name: "nowhere bound", url: "https://open.spotify.com/playlist/3OIKVnP7WCWytKDYgNAqq6", img: "pfps/nowhere bound.jpeg", songs: 27, date: "2024-05-13", subtitle: null },
     { name: "My Ever-Evolving Music Taste", url: "https://open.spotify.com/playlist/5Iv7DHWkqADHFenHas0Fyp", img: "pfps/My Ever-Evolving Music Taste.jpeg", songs: 66, date: "2021-11-18", subtitle: "take me back to the simplicity" },
     { name: "is this tequila?", url: "https://open.spotify.com/playlist/0SZT2EDZ36dD2ygwvkbWFI", img: "pfps/is this tequila?.jpeg", songs: 52, date: "2025-04-20", subtitle: null },
@@ -67,7 +67,7 @@ const playlists = [
     { name: "keep away", url: "https://open.spotify.com/playlist/4kw13qPLbp0F7uT0YsCB92", img: "pfps/keep away.jpeg", songs: 57, date: "2024-06-25", subtitle: null },
     { name: "vodka and ginger ale", url: "https://open.spotify.com/playlist/0kyl89XxvtIsh2gpdlLqCa", img: "pfps/vodka and ginger ale.jpeg", songs: 30, date: "2024-09-13", subtitle: null },
     { name: "playlist of despair and yearning", url: "https://open.spotify.com/playlist/0KZdlD3t5lCrGWsoOTMn0c", img: "pfps/playlist of despair and yearning.jpeg", songs: 24, date: "2025-09-09", subtitle: null },
-    { name: "roadtrip!", url: "https://open.spotify.com/playlist/5ca055G3SdGoXVkM3R3iN0", img: "pfps/ roadtrip!.jpeg", songs: 100, date: "2022-10-07", subtitle: null },
+    { name: "roadtrip!", url: "https://open.spotify.com/playlist/5ca055G3SdGoXVkM3R3iN0", img: "pfps/roadtrip!.jpeg", songs: 100, date: "2022-10-07", subtitle: null },
     { name: "read the first letters", url: "https://open.spotify.com/playlist/5cPnbZA1947C9WtqJ43XxM", img: "pfps/read the first letters.jpeg", songs: 15, date: "2022-10-07", subtitle: "just read the title" },
     { name: "idk what they're saying but it's funky fresh (my version)", url: "https://open.spotify.com/playlist/5gP8WtD412ABZFAP01BX87", img: "pfps/idk what they're saying but it's funky fresh (my version).jpeg", songs: 38, date: "2022-08-17", subtitle: "My version is better fuck you jackson" },
     { name: "moonlight on the water", url: "https://open.spotify.com/playlist/6ruqRsH8EqqUD0xoFPBCnG", img: "pfps/moonlight on the water.jpeg", songs: 25, date: "2022-08-06", subtitle: null },
@@ -81,13 +81,13 @@ const playlists = [
     { name: "take me back", url: "https://open.spotify.com/playlist/22ZZvdO5INxEbVpEqGXWpS", img: "pfps/take me back.jpeg", songs: 9, date: "2025-06-23", subtitle: null },
     { name: "MAKE ME AN OFFER", url: "https://open.spotify.com/playlist/5IroSDXzQ982pHQRR3jaAT", img: "pfps/MAKE ME AN OFFER.jpeg", songs: 47, date: "2023-10-12", subtitle: null },
     { name: "Triton", url: "https://open.spotify.com/playlist/0ukxgKhTEgPmVVD0pUDdjn", img: "pfps/Triton.jpeg", songs: 19, date: "2023-01-11", subtitle: null },
-    { name: "something about us", url: "https://open.spotify.com/playlist/6lbD5kUMBKknwQwVhcmJzN", img: "pfps/ something about us.jpeg", songs: 19, date: "2023-07-30", subtitle: null },
+    { name: "something about us", url: "https://open.spotify.com/playlist/6lbD5kUMBKknwQwVhcmJzN", img: "pfps/something about us.jpeg", songs: 19, date: "2023-07-30", subtitle: null },
     { name: "Top Tracks 11/29/2021 (last 6 months)", url: "https://open.spotify.com/playlist/1OutsIXGodH2mBO24I2OiW", img: "pfps/Top Tracks 11:29:2021 (last 6 months).jpeg", songs: 50, date: "2021-11-29", subtitle: "Your favorite tracks last 6 months as of 11/29/2021. Created by statsforspotify.com" },
     { name: "whiskey bent", url: "https://open.spotify.com/playlist/353Y8McXMV4r6gB4bV6Wtc", img: "pfps/whiskey bent.jpeg", songs: 34, date: "2024-08-20", subtitle: null },
-    { name: "right back at you", url: "https://open.spotify.com/playlist/1zV4ZyK8eMWmNCcGuNh4oo", img: "pfps/ right back at you.jpeg", songs: 38, date: "2025-07-18", subtitle: null },
-    { name: "Late Summer '22", url: "https://open.spotify.com/playlist/0TOOW74TqYTBRAinIiG7nv", img: "pfps/ Late Summer '22.jpeg", songs: 37, date: "2022-08-06", subtitle: null },
-    { name: "textbook panderin'", url: "https://open.spotify.com/playlist/0MQpy1oC3c7vPh4BC0TT88", img: "pfps/ textbook panderin'.jpeg", songs: 31, date: "2024-05-03", subtitle: null },
-    { name: "jam ideas", url: "https://open.spotify.com/playlist/6nUlFYZXvAPdDG26sdV4HJ", img: "pfps/ jam ideas.jpeg", songs: 16, date: "2024-10-16", subtitle: null },
+    { name: "right back at you", url: "https://open.spotify.com/playlist/1zV4ZyK8eMWmNCcGuNh4oo", img: "pfps/right back at you.jpeg", songs: 38, date: "2025-07-18", subtitle: null },
+    { name: "Late Summer '22", url: "https://open.spotify.com/playlist/0TOOW74TqYTBRAinIiG7nv", img: "pfps/Late Summer '22.jpeg", songs: 37, date: "2022-08-06", subtitle: null },
+    { name: "textbook panderin'", url: "https://open.spotify.com/playlist/0MQpy1oC3c7vPh4BC0TT88", img: "pfps/textbook panderin'.jpeg", songs: 31, date: "2024-05-03", subtitle: null },
+    { name: "jam ideas", url: "https://open.spotify.com/playlist/6nUlFYZXvAPdDG26sdV4HJ", img: "pfps/jam ideas.jpeg", songs: 16, date: "2024-10-16", subtitle: null },
     { name: "My playlist #82", url: "https://open.spotify.com/playlist/5qU7JubxOSX4atFGmKSiY3", img: "pfps/My playlist #82.jpeg", songs: 1, date: "2024-08-23", subtitle: null },
     { name: "CAKE", url: "https://open.spotify.com/playlist/29vF8G11tLC7q8pbueadI5", img: "pfps/CAKE.jpeg", songs: 60, date: "2025-08-27", subtitle: null },
     { name: "finally", url: "https://open.spotify.com/playlist/15nG7kUtj6rMQwOfwUIsFX", img: "pfps/finally.jpeg", songs: 33, date: "2022-12-12", subtitle: "Lasted about a week. Foo fighters good tho" },
@@ -96,7 +96,7 @@ const playlists = [
     { name: "Old Timey Jazz", url: "https://open.spotify.com/playlist/0QNWiSfwkeum4eGf3ijTVw", img: "pfps/Old Timey Jazz.jpeg", songs: 38, date: "2021-10-25", subtitle: null },
     { name: "was pop is rock", url: "https://open.spotify.com/playlist/3uPZX0ScFjO31y0APeJ6Aw", img: "pfps/was pop is rock.jpeg", songs: 25, date: "2023-11-10", subtitle: null },
     { name: "Avett addiction", url: "https://open.spotify.com/playlist/0Dw24Hw8sjJBFfigwGzwsp", img: "pfps/Avett addiction.jpeg", songs: 75, date: "2023-08-06", subtitle: null },
-    { name: "reminds me of friends", url: "https://open.spotify.com/playlist/4gzoXDjsyGdFCpbfg8S66h", img: "pfps/ reminds me of friends.jpeg", songs: 78, date: "2022-01-21", subtitle: null },
+    { name: "reminds me of friends", url: "https://open.spotify.com/playlist/4gzoXDjsyGdFCpbfg8S66h", img: "pfps/reminds me of friends.jpeg", songs: 78, date: "2022-01-21", subtitle: null },
     { name: "i - 85", url: "https://open.spotify.com/playlist/5rLDqdJmBBgy3OcP6Fipan", img: "pfps/i - 85.jpeg", songs: 45, date: "2023-09-16", subtitle: null },
     { name: "the pressure", url: "https://open.spotify.com/playlist/61TnNVt1xo7khTB7jcJxuX", img: "pfps/the pressure.jpeg", songs: 39, date: "2024-04-08", subtitle: null },
     { name: "fradboy", url: "https://open.spotify.com/playlist/1payFd3nIhrCmtHOjDDTtD", img: "pfps/fradboy.jpeg", songs: 24, date: "2022-10-05", subtitle: null },
@@ -560,6 +560,8 @@ function escHtml(str) {
 function encodeImgPath(path) {
     // Split at pfps/ and encode the filename part, then use blob URL if available
     if (!path) return '';
+    // Normalize curly quotes to straight quotes
+    path = path.replace(/'/g, "'");
     const parts = path.split('/');
     const dir = parts.slice(0, -1).join('/');
     const file = parts[parts.length - 1];
