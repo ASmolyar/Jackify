@@ -26,7 +26,7 @@ function getImageUrl(path) {
 
 // Playlist data
 const playlists = [
-    { name: "Liked Songs", url: "https://open.spotify.com/collection/tracks", img: null, songs: 241, date: "2021-10-26", subtitle: null, isLiked: true },
+    { name: "Liked Songs", url: "https://open.spotify.com/collection/tracks", img: null, songs: 241, date: "2025-12-18", subtitle: null, isLiked: true },
     { name: "On Repeat", url: "https://open.spotify.com/playlist/49YeV4mj1uXMMi8FIu97V7", img: "pfps/On Repeat.jpeg", songs: 30, date: "2025-12-18", subtitle: null, description: "This playlist was collected posthumously.", category: "madeForYou", author: "Spotify" },
     { name: "Repeat Rewind", url: "https://open.spotify.com/playlist/2H4u1iNige1NX86pEWBcPv", img: "pfps/Repeat Rewind.jpg", songs: 30, date: "2025-12-18", subtitle: null, description: "This playlist was collected posthumously.", category: "madeForYou", author: "Spotify" },
     { name: "Your Top Songs 2022", url: "https://open.spotify.com/playlist/0yhPPOU0ZTLELil0deZEiH", img: "pfps/Your Top Songs 2022.jpeg", songs: 101, date: "2022-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
