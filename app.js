@@ -45,7 +45,7 @@ const playlists = [
     { name: "SAE", url: "https://open.spotify.com/playlist/3aq7FULzFT8znmlWODqv2L", img: "pfps/SAE.jpeg", songs: 1, date: "2025-05-26", subtitle: null },
     { name: "junior", url: "https://open.spotify.com/playlist/4W3cOeADPWyi1mltiT1FAL", img: "pfps/junior.jpeg", songs: 34, date: "2022-09-14", subtitle: "Bruh what even was September\u{1F602}\u{1F602}" },
     { name: "Rowing Trip '21", url: "https://open.spotify.com/playlist/6GN9yE7qAD3B0vgOnYCUqM", img: "pfps/Rowing Trip '21.jpeg", songs: 54, date: "2022-01-08", subtitle: "getting gunned down in the streets of miami" },
-    { name: "\u201Ccrackle barrel \u201D", url: "https://open.spotify.com/playlist/6LTDwWwkvAeuCTunkqqLUX", img: "pfps/\u201Ccrackle barrel \u201D.jpeg", songs: 26, date: "2023-10-11", subtitle: null },
+    { name: "\u201Ccrackle barrel \u201D", url: "https://open.spotify.com/playlist/6LTDwWwkvAeuCTunkqqLUX", img: "pfps/\u201Ccrackle barrel \u201C.jpeg", songs: 26, date: "2023-10-11", subtitle: null },
     { name: "Old summer", url: "https://open.spotify.com/playlist/62w94hFNNqm2lw74LO70Pg", img: "pfps/Old summer.jpeg", songs: 26, date: "2023-03-19", subtitle: null },
     { name: "driving off", url: "https://open.spotify.com/playlist/0ICnWhUNvPhHY9zBWhgFAG", img: "pfps/driving off.jpeg", songs: 37, date: "2023-04-28", subtitle: null },
     { name: "nowhere bound", url: "https://open.spotify.com/playlist/3OIKVnP7WCWytKDYgNAqq6", img: "pfps/nowhere bound.jpeg", songs: 27, date: "2024-05-13", subtitle: null },
