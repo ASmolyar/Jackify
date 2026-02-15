@@ -1436,7 +1436,7 @@ body {
     .playlist-grid.grid-view {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+        gap: 12px;
         padding: 16px 12px;
     }
 
@@ -1447,6 +1447,7 @@ body {
         background: none;
         gap: 6px;
         align-items: flex-start;
+        width: 100%;
     }
 
     .playlist-grid.grid-view .playlist-card:hover {
@@ -1455,13 +1456,17 @@ body {
 
     .playlist-grid.grid-view .card-img-wrapper {
         width: 100%;
-        height: auto;
-        aspect-ratio: 1 / 1;
+        padding-bottom: 100%; /* Creates perfect square */
+        position: relative;
         margin: 0;
         border-radius: 4px;
+        overflow: hidden;
     }
 
     .playlist-grid.grid-view .card-img {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
