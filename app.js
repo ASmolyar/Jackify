@@ -594,12 +594,10 @@ const YOUTUBE_API_KEY = 'AIzaSyC0m1qpXOVu_RwavkPJ5ikgIYNH29go-gM';
 let ytPlayer = null;
 let currentQueue = [];
 let currentQueueIndex = -1;
-let isVideoPoppedOut = false;
 let isShuffled = false;
 let repeatMode = 'off'; // 'off', 'all', 'one'
 let currentVolume = 70;
 let progressUpdateInterval = null;
-let isVideoExpanded = false;
 
 // YouTube IFrame API ready callback
 window.onYouTubeIframeAPIReady = function() {
@@ -708,9 +706,6 @@ async function playTrack(track, queueIndex = -1) {
 
     // Update now playing info
     updateNowPlayingInfo(track);
-
-    // Show expand button
-    document.getElementById('expandVideoBtn').style.display = 'block';
 }
 
 // Update now playing display
@@ -930,37 +925,6 @@ function updateVolumeDisplay() {
     }
 }
 
-// Video pop-out toggle
-function toggleVideoExpand() {
-    const pip = document.getElementById('videoPip');
-    const pipContent = document.getElementById('pipContent');
-    const nowPlayingVideo = document.getElementById('nowPlayingVideo');
-    const placeholder = document.getElementById('videoPlaceholder');
-    const ytPlayerDiv = document.getElementById('ytPlayer');
-    const expandBtn = document.getElementById('expandVideoBtn');
-    const expandIcon = document.getElementById('expandIcon');
-
-    isVideoPoppedOut = !isVideoPoppedOut;
-
-    if (isVideoPoppedOut) {
-        // Pop out: move player to PIP modal
-        pip.classList.remove('hidden');
-        pipContent.appendChild(ytPlayerDiv);
-        placeholder.classList.remove('hidden');
-        expandBtn.title = 'Pop in video';
-        // Change icon to "compress" icon
-        expandIcon.innerHTML = '<path d="M5.5 0A.75.75 0 0 1 6.25.75v2.69l3.72-3.72a.75.75 0 1 1 1.06 1.06L7.31 4.5h2.69a.75.75 0 0 1 0 1.5h-4A.75.75 0 0 1 5.25 5.25v-4A.75.75 0 0 1 5.5 0zM10.5 16a.75.75 0 0 1-.75-.75v-2.69l-3.72 3.72a.75.75 0 1 1-1.06-1.06l3.72-3.72H6a.75.75 0 0 1 0-1.5h4a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-.75.75z"/>';
-    } else {
-        // Pop in: move player back to now playing bar
-        pip.classList.add('hidden');
-        nowPlayingVideo.insertBefore(ytPlayerDiv, placeholder);
-        placeholder.classList.add('hidden');
-        expandBtn.title = 'Pop out video';
-        // Change icon back to "expand" icon
-        expandIcon.innerHTML = '<path d="M6.53 9.47a.75.75 0 0 1 0 1.06l-3.72 3.72H5.5a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75v-4a.75.75 0 0 1 1.5 0v2.69l3.72-3.72a.75.75 0 0 1 1.06 0zm2.94-2.94a.75.75 0 0 1 0-1.06l3.72-3.72H10.5a.75.75 0 1 1 0-1.5h4a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0V3.31l-3.72 3.72a.75.75 0 0 1-1.06 0z"/>';
-    }
-}
-
 // Wire up event listeners
 document.getElementById('playPauseBtn').addEventListener('click', togglePlayPause);
 document.getElementById('nextBtn').addEventListener('click', playNext);
@@ -968,8 +932,6 @@ document.getElementById('prevBtn').addEventListener('click', playPrevious);
 document.getElementById('shuffleBtn').addEventListener('click', toggleShuffle);
 document.getElementById('repeatBtn').addEventListener('click', toggleRepeat);
 document.getElementById('volumeBtn').addEventListener('click', toggleMute);
-document.getElementById('expandVideoBtn').addEventListener('click', toggleVideoExpand);
-document.getElementById('closePip').addEventListener('click', toggleVideoExpand);
 
 // Progress bar click
 document.getElementById('progressTrack').addEventListener('click', (e) => {

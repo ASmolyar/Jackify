@@ -86,11 +86,6 @@
             <div class="now-playing-left">
                 <div class="now-playing-video" id="nowPlayingVideo">
                     <div id="ytPlayer"></div>
-                    <div id="videoPlaceholder" class="video-placeholder hidden">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="#b3b3b3">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-                        </svg>
-                    </div>
                 </div>
                 <div class="now-playing-info" id="nowPlayingInfo">
                     <span class="now-playing-empty"></span>
@@ -103,9 +98,6 @@
                     <button class="control-btn play-btn" id="playPauseBtn" title="Play"><svg id="playPauseIcon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"/></svg></button>
                     <button class="control-btn" id="nextBtn" title="Next"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.575a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-.6z"/></svg></button>
                     <button class="control-btn" id="repeatBtn" title="Repeat"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5a3.75 3.75 0 0 1-3.75 3.75H9.81l1.018 1.018a.75.75 0 1 1-1.06 1.06L6.939 12.75l2.829-2.828a.75.75 0 1 1 1.06 1.06L9.81 12h2.44A2.25 2.25 0 0 0 14.5 9.75v-5a2.25 2.25 0 0 0-2.25-2.25h-8.5A2.25 2.25 0 0 0 1.5 4.75v5A2.25 2.25 0 0 0 3.75 12H5v1.5H3.75A3.75 3.75 0 0 1 0 9.75v-5zM9.061 3.22a.75.75 0 0 1 1.061-1.061l2.829 2.829a.75.75 0 0 1 0 1.061l-2.829 2.828a.75.75 0 1 1-1.061-1.06L10.879 6l-1.818-1.818a.75.75 0 0 1 0-1.061z"/></svg></button>
-                    <button class="control-btn" id="expandVideoBtn" title="Pop out video" style="display:none;">
-                        <svg id="expandIcon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6.53 9.47a.75.75 0 0 1 0 1.06l-3.72 3.72H5.5a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75v-4a.75.75 0 0 1 1.5 0v2.69l3.72-3.72a.75.75 0 0 1 1.06 0zm2.94-2.94a.75.75 0 0 1 0-1.06l3.72-3.72H10.5a.75.75 0 1 1 0-1.5h4a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0V3.31l-3.72 3.72a.75.75 0 0 1-1.06 0z"/></svg>
-                    </button>
                 </div>
                 <div class="progress-bar">
                     <span class="progress-time" id="progressCurrent">0:00</span>
@@ -124,17 +116,6 @@
                         <div class="volume-fill" id="volumeFill"></div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- PIP Video Modal -->
-        <div class="video-pip hidden" id="videoPip">
-            <div class="video-pip-header">
-                <span class="video-pip-title" id="pipTitle">Now Playing</span>
-                <button class="video-pip-close" id="closePip">&times;</button>
-            </div>
-            <div class="video-pip-content" id="pipContent">
-                <!-- ytPlayer will be moved here -->
             </div>
         </div>
     </main>
