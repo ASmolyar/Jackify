@@ -438,6 +438,10 @@ async function openPlaylist(p) {
     document.getElementById('playlistView').classList.remove('hidden');
     document.getElementById('backBtn').disabled = false;
 
+    // Hide mobile library header when viewing a playlist
+    const mobileHeader = document.querySelector('.mobile-library-header');
+    if (mobileHeader) mobileHeader.style.display = 'none';
+
     await renderPlaylistDetail(p);
     renderSidebar();
 
@@ -452,6 +456,10 @@ function goHome() {
     document.getElementById('homeView').classList.remove('hidden');
     document.getElementById('playlistView').classList.add('hidden');
     document.getElementById('backBtn').disabled = true;
+
+    // Show mobile library header when returning home
+    const mobileHeader = document.querySelector('.mobile-library-header');
+    if (mobileHeader) mobileHeader.style.display = 'block';
 
     renderSidebar();
 }
