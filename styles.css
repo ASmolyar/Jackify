@@ -48,6 +48,8 @@ body {
 
 .sidebar-logo {
     padding: 24px 24px 16px;
+    display: flex;
+    align-items: center;
 }
 
 .sidebar-nav {
@@ -525,7 +527,7 @@ body {
 /* Track List */
 .track-list-header {
     display: grid;
-    grid-template-columns: 16px 4fr 2fr 1fr;
+    grid-template-columns: 16px 4fr 2fr 1fr 1fr;
     gap: 16px;
     padding: 0 32px 8px;
     border-bottom: 1px solid hsla(0,0%,100%,.1);
@@ -546,7 +548,7 @@ body {
 
 .track-row {
     display: grid;
-    grid-template-columns: 16px 4fr 2fr 1fr;
+    grid-template-columns: 16px 4fr 2fr 1fr 1fr;
     gap: 16px;
     padding: 8px 32px;
     border-radius: 4px;
@@ -868,7 +870,8 @@ body {
     .track-row {
         grid-template-columns: 16px 1fr 80px;
     }
-    .track-album {
+    .track-album,
+    .track-added {
         display: none;
     }
 }
@@ -882,14 +885,16 @@ body {
     overflow: hidden;
     flex-shrink: 0;
     position: relative;
+    pointer-events: none;
 }
 
 .now-playing-video iframe {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    pointer-events: none;
 }
 
 .now-playing-info {

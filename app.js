@@ -120,6 +120,27 @@ function formatDuration(ms) {
     return `${min}:${sec.toString().padStart(2, '0')}`;
 }
 
+// Fetch album artwork from Spotify
+async function fetchAlbumArt(trackId, imgElement) {
+    if (!trackId || !imgElement) return;
+
+    try {
+        // Use Spotify's public oEmbed endpoint (no auth required)
+        const response = await fetch(`https://open.spotify.com/oembed?url=spotify:track:${trackId}`);
+        const data = await response.json();
+
+        // Extract thumbnail URL from oEmbed response
+        if (data.thumbnail_url) {
+            imgElement.src = data.thumbnail_url;
+        } else {
+            imgElement.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error fetching album art:', error);
+        imgElement.style.display = 'none';
+    }
+}
+
 // CSV filename mapping
 function getCSVFilename(playlistName) {
     const overrides = {
@@ -132,6 +153,16 @@ function getCSVFilename(playlistName) {
         "ript": "ript_.csv",
         "\u{1F3C4} \u{1F3B8}": "\u{1F3C4}_\u{1F3B8}_.csv",
         "\u201Ccrackle barrel \u201D": '"crackle_barrel_".csv',
+        "Spring '22": "Spring_'22.csv",
+        "Mom's Jams": "Mom's_Jams.csv",
+        "idk what they're saying but it's funky fresh (my version)": "idk_what_they're_saying_but_it's_funky_fresh_(my_version).csv",
+        "Winter '22": "Winter_'22.csv",
+        "Late Summer '22": "Late_Summer_'22.csv",
+        "textbook panderin'": "textbook_panderin'.csv",
+        "barn dancing isn't real": "barn_dancing_isn't_real.csv",
+        "Boys Summer '22": "Boys_Summer_'22.csv",
+        "from the soul": "from_the_soul.csv",
+        "Early Summer '22": "Early_Summer_'22.csv"
     };
     if (overrides[playlistName] !== undefined) return overrides[playlistName];
     return playlistName.replaceAll(" ", "_") + ".csv";
@@ -176,13 +207,20 @@ function parseCSV(text) {
     const albumIdx = headers.indexOf('Album Name');
     const artistIdx = headers.indexOf('Artist Name(s)');
     const durationIdx = headers.indexOf('Duration (ms)');
+    const trackUriIdx = headers.indexOf('Track URI');
+    const addedAtIdx = headers.indexOf('Added At');
     return lines.slice(1).map(line => {
         const fields = parseCSVLine(line);
+        const trackUri = fields[trackUriIdx] || '';
+        const trackId = trackUri.split(':')[2] || '';
         return {
             name: fields[nameIdx] || '',
             album: fields[albumIdx] || '',
             artist: fields[artistIdx] || '',
             duration: parseInt(fields[durationIdx]) || 0,
+            trackId: trackId,
+            addedAt: fields[addedAtIdx] || '',
+            albumArt: trackId ? `https://i.scdn.co/image/${trackId}` : null
         };
     });
 }
@@ -197,6 +235,17 @@ function getGreeting() {
 
 // Initialize
 function init() {
+    // Sort playlists by date (newest to oldest)
+    playlists.sort((a, b) => {
+        // Handle null dates - put them at the end
+        if (!a.date && !b.date) return 0;
+        if (!a.date) return 1;
+        if (!b.date) return -1;
+
+        // Sort by date descending (newest first)
+        return new Date(b.date) - new Date(a.date);
+    });
+
     document.getElementById('greeting').textContent = getGreeting();
     renderPlaylistGrid();
     renderSidebar();
@@ -374,6 +423,7 @@ async function renderPlaylistDetail(p) {
             <span>#</span>
             <span>Title</span>
             <span>Album</span>
+            <span>Date added</span>
             <span class="col-duration">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/><path d="M8 3.25a.75.75 0 0 1 .75.75v3.25H11a.75.75 0 0 1 0 1.5H7.25V4A.75.75 0 0 1 8 3.25z"/></svg>
             </span>
@@ -384,18 +434,27 @@ async function renderPlaylistDetail(p) {
         trackData.forEach((track, idx) => {
             const row = document.createElement('div');
             row.className = 'track-row';
+            const addedDate = track.addedAt ? formatDate(track.addedAt.split('T')[0]) : '';
+            const formattedArtist = track.artist.replace(/;/g, ', ');
             row.innerHTML = `
                 <span class="track-num">${idx + 1}</span>
                 <div class="track-info">
+                    <img class="track-img" src="" alt="" data-track-id="${track.trackId}">
                     <div class="track-name-artist">
                         <div class="track-name">${escHtml(track.name)}</div>
-                        <div class="track-artist">${escHtml(track.artist)}</div>
+                        <div class="track-artist">${escHtml(formattedArtist)}</div>
                     </div>
                 </div>
                 <span class="track-album">${escHtml(track.album)}</span>
+                <span class="track-added">${addedDate}</span>
                 <span class="track-duration">${formatDuration(track.duration)}</span>
             `;
             tracks.appendChild(row);
+
+            // Fetch album artwork
+            if (track.trackId) {
+                fetchAlbumArt(track.trackId, row.querySelector('.track-img'));
+            }
         });
     } catch (e) {
         // Fallback: show Open in Spotify link
@@ -410,7 +469,7 @@ async function renderPlaylistDetail(p) {
     }
 }
 
-// Setup search (sidebar nav item)
+// Setup navigation
 function setupSearch() {
     document.getElementById('backBtn').addEventListener('click', goHome);
 
@@ -419,31 +478,6 @@ function setupSearch() {
         searchTerm = '';
         goHome();
         renderPlaylistGrid();
-    });
-
-    // Search
-    document.querySelectorAll('.sidebar-nav-item')[1].addEventListener('click', () => {
-        // Toggle search in home view
-        goHome();
-        const homeView = document.getElementById('homeView');
-        const section = homeView.querySelector('.section');
-        let searchContainer = homeView.querySelector('.search-container');
-        if (!searchContainer) {
-            searchContainer = document.createElement('div');
-            searchContainer.className = 'search-container';
-            searchContainer.innerHTML = `
-                <div class="search-input-wrapper">
-                    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M7 1.75a5.25 5.25 0 1 0 0 10.5 5.25 5.25 0 0 0 0-10.5zM.25 7a6.75 6.75 0 1 1 12.096 4.12l3.184 3.185a.75.75 0 1 1-1.06 1.06l-3.185-3.184A6.75 6.75 0 0 1 .25 7z"/></svg>
-                    <input class="search-input" type="text" placeholder="What do you want to listen to?" autofocus>
-                </div>
-            `;
-            section.parentElement.insertBefore(searchContainer, section);
-            searchContainer.querySelector('.search-input').addEventListener('input', (e) => {
-                searchTerm = e.target.value;
-                renderPlaylistGrid();
-            });
-        }
-        searchContainer.querySelector('.search-input').focus();
     });
 }
 
@@ -526,7 +560,9 @@ function initYouTubePlayer() {
             rel: 0,
             showinfo: 0,
             fs: 0,
-            playsinline: 1
+            playsinline: 1,
+            disablekb: 1,
+            iv_load_policy: 3
         },
         events: {
             onReady: onPlayerReady,
@@ -649,10 +685,11 @@ async function playTrack(track, queueIndex = -1) {
 // Update now playing display
 function updateNowPlayingInfo(track) {
     const info = document.getElementById('nowPlayingInfo');
+    const formattedArtist = track.artist.replace(/;/g, ', ');
     info.innerHTML = `
         <div class="now-playing-track">
             <div class="now-playing-name">${escHtml(track.name)}</div>
-            <div class="now-playing-artist">${escHtml(track.artist)}</div>
+            <div class="now-playing-artist">${escHtml(formattedArtist)}</div>
         </div>
     `;
 }
