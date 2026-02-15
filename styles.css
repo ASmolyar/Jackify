@@ -1022,12 +1022,18 @@ body {
     /* Hide columns on small mobile */
     .track-list-header,
     .track-row {
-        grid-template-columns: 16px 1fr 60px;
+        grid-template-columns: 16px 1fr 60px !important;
     }
 
     .track-album,
     .track-added {
         display: none;
+    }
+
+    /* Override hide-date-column on mobile */
+    .playlist-tracks.hide-date-column .track-list-header,
+    .playlist-tracks.hide-date-column .track-row {
+        grid-template-columns: 16px 1fr 60px !important;
     }
 
     .track-list-header .col-duration svg {
