@@ -339,7 +339,7 @@ function renderPlaylistGrid() {
         card.innerHTML = `
             <div class="card-img-wrapper">
                 ${imgHtml}
-                <button class="card-play-btn" onclick="event.stopPropagation(); window.open('${p.url}', '_blank')">
+                <button class="card-play-btn">
                     <svg viewBox="0 0 24 24"><path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"/></svg>
                 </button>
             </div>
@@ -828,6 +828,12 @@ function updateTrackHighlight(track) {
 
 // Update now playing display
 function updateNowPlayingInfo(track) {
+    // Hide placeholder, show video
+    const placeholder = document.getElementById('nowPlayingPlaceholder');
+    const video = document.getElementById('nowPlayingVideo');
+    if (placeholder) placeholder.style.display = 'none';
+    if (video) video.style.display = 'block';
+
     const info = document.getElementById('nowPlayingInfo');
     const formattedArtist = track.artist.replace(/;/g, ', ');
     info.innerHTML = `
@@ -1165,6 +1171,9 @@ const nowPlayingBar = document.querySelector('.now-playing-bar');
 const nowPlayingVideoOriginal = document.getElementById('nowPlayingVideo');
 const expandedVideoContainer = document.getElementById('expandedVideoContainer');
 
+// Store original parent of video for restoring later
+const nowPlayingLeft = document.querySelector('.now-playing-left');
+
 // Toggle expanded view
 function toggleExpandedView() {
     isExpanded = !isExpanded;
@@ -1173,7 +1182,8 @@ function toggleExpandedView() {
         // Show expanded view
         expandedView.classList.remove('hidden');
 
-        // Visually reposition video to expanded position (no DOM manipulation - seamless playback)
+        // Move video to expanded container
+        expandedVideoContainer.appendChild(nowPlayingVideoOriginal);
         nowPlayingVideoOriginal.classList.add('expanded-position');
 
         // Update expanded view content
@@ -1189,7 +1199,8 @@ function toggleExpandedView() {
         // Hide expanded view
         expandedView.classList.add('hidden');
 
-        // Return video to compact bar position
+        // Move video back to compact bar (before album art)
+        nowPlayingLeft.insertBefore(nowPlayingVideoOriginal, nowPlayingLeft.firstChild.nextSibling);
         nowPlayingVideoOriginal.classList.remove('expanded-position');
     }
 }

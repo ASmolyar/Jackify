@@ -225,6 +225,11 @@ body {
     gap: 8px;
 }
 
+.topbar-mobile-logo {
+    display: none;
+    align-items: center;
+}
+
 .topbar-btn {
     width: 32px;
     height: 32px;
@@ -997,6 +1002,10 @@ body {
         padding: 12px 16px;
     }
 
+    .topbar-mobile-logo {
+        display: flex;
+    }
+
     .topbar-profile span {
         font-size: 13px;
     }
@@ -1059,6 +1068,17 @@ body {
 }
 
 /* Album art styling */
+.now-playing-placeholder-art {
+    width: 100px;
+    height: 56px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .now-playing-album-art {
     width: 100px;
     height: 56px;
@@ -1067,25 +1087,19 @@ body {
     flex-shrink: 0;
 }
 
-/* Expanded video positioning - visually moves to center without DOM manipulation */
+/* Expanded video positioning */
 .now-playing-video.expanded-position {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 100%;
     max-width: 400px;
     height: auto;
     aspect-ratio: 16 / 9;
-    z-index: 1001;
     border-radius: 8px;
+    overflow: hidden;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     display: block !important;
 }
 
 .now-playing-video.expanded-position iframe {
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
 }
@@ -1237,7 +1251,13 @@ body {
 }
 
 .expanded-video-container {
-    display: none; /* Not used - video is repositioned from bottom bar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
 }
 
 
@@ -1497,18 +1517,39 @@ body {
         display: none;
     }
 
+    .now-playing-placeholder-art {
+        width: 56px;
+        height: 56px;
+    }
+
+    .now-playing-placeholder-art svg {
+        width: 20px;
+        height: 20px;
+    }
+
     .now-playing-album-art {
         display: block !important;
         width: 56px;
         height: 56px;
     }
 
+    .now-playing-info {
+        overflow: hidden;
+        min-width: 0;
+    }
+
     .now-playing-name {
         font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .now-playing-artist {
         font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .player-controls {
@@ -1529,7 +1570,8 @@ body {
 
     #prevBtn,
     #nextBtn,
-    #shuffleBtn {
+    #shuffleBtn,
+    #playPauseBtn {
         display: none;
     }
 
