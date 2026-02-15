@@ -292,6 +292,37 @@ function init() {
     setupSearch();
     setupFilters();
     setupViewToggle();
+
+    // Check for state to restore after a responsive reload
+    const savedState = sessionStorage.getItem('jackify_reload_state');
+    if (savedState) {
+        sessionStorage.removeItem('jackify_reload_state');
+        try {
+            const state = JSON.parse(savedState);
+
+            // Re-open the viewed playlist
+            if (state.viewedPlaylistName) {
+                const viewedPlaylist = playlists.find(p => p.name === state.viewedPlaylistName);
+                if (viewedPlaylist) {
+                    openPlaylist(viewedPlaylist);
+                }
+            }
+
+            // Queue playback restore for when YouTube player is ready
+            if (state.playingPlaylistName) {
+                const playlistObj = playlists.find(p => p.name === state.playingPlaylistName);
+                if (playlistObj) {
+                    pendingRestore = {
+                        playlist: playlistObj,
+                        trackIndex: state.currentQueueIndex || 0,
+                        seekTime: state.currentTime || 0
+                    };
+                }
+            }
+        } catch (e) {
+            console.error('Error restoring state:', e);
+        }
+    }
 }
 
 // Setup filter buttons
@@ -705,6 +736,8 @@ let currentVolume = 70;
 let progressUpdateInterval = null;
 let hasAPIError = false; // Track if YouTube API is unavailable
 let videoMappings = {}; // Pre-generated video mappings
+let pendingRestore = null; // State to restore after responsive reload
+let pendingSeekTime = null; // Seek time to apply once playback starts
 
 // YouTube IFrame API ready callback
 window.onYouTubeIframeAPIReady = function() {
@@ -773,10 +806,23 @@ document.addEventListener('DOMContentLoaded', () => {
 function onPlayerReady(event) {
     event.target.setVolume(currentVolume);
     updateVolumeDisplay();
+
+    // Restore playback if we're coming back from a responsive reload
+    if (pendingRestore) {
+        const { playlist, trackIndex, seekTime } = pendingRestore;
+        pendingRestore = null;
+        restorePlayback(playlist, trackIndex, seekTime);
+    }
 }
 
 function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
+        // Apply pending seek from responsive reload
+        if (pendingSeekTime !== null) {
+            const seekTo = pendingSeekTime;
+            pendingSeekTime = null;
+            ytPlayer.seekTo(seekTo, true);
+        }
         updatePlayPauseButton(true);
         startProgressUpdate();
     } else if (event.data === YT.PlayerState.PAUSED) {
@@ -1078,6 +1124,45 @@ async function playPlaylist(playlist) {
     }
 }
 
+// Restore playback after responsive reload
+async function restorePlayback(playlist, trackIndex, seekTime) {
+    try {
+        const csvFile = getCSVFilename(playlist.name);
+        const resp = await fetch('csvs/' + encodeURIComponent(csvFile));
+        if (!resp.ok) return;
+        const text = await resp.text();
+        const allTracks = parseCSV(text);
+        const tracks = allTracks.filter(t => t.name && t.name.trim() !== '');
+        if (tracks.length === 0 || trackIndex >= tracks.length) return;
+
+        playingPlaylist = playlist;
+        currentQueue = tracks;
+        originalQueue = [...tracks];
+        currentQueueIndex = trackIndex;
+
+        const track = currentQueue[trackIndex];
+        const videoId = await searchYouTube(track.name, track.artist);
+        if (!videoId) return;
+
+        ytPlayer.loadVideoById(videoId);
+        updateNowPlayingInfo(track);
+        updateTrackHighlight(track);
+
+        // Set pending seek — onPlayerStateChange will apply it once playback starts
+        if (seekTime > 0) {
+            pendingSeekTime = seekTime;
+        }
+
+        setTimeout(() => {
+            if (ytPlayer && ytPlayer.playVideo) {
+                ytPlayer.playVideo();
+            }
+        }, 100);
+    } catch (e) {
+        console.error('Error restoring playback:', e);
+    }
+}
+
 // Player controls
 function togglePlayPause() {
     if (!ytPlayer) return;
@@ -1367,48 +1452,31 @@ function initializeVideoPosition() {
     }
 }
 
-// Handle responsive transitions
+// Handle responsive transitions — full reload on breakpoint change
 let lastWidth = window.innerWidth;
-let isTransitioning = false;
 
-window.addEventListener('resize', async () => {
+window.addEventListener('resize', () => {
     const currentWidth = window.innerWidth;
     const wasMobile = lastWidth <= 600;
     const isMobile = currentWidth <= 600;
 
-    // Detect desktop <-> mobile transition
-    if (wasMobile !== isMobile && ytPlayer && currentQueue.length > 0) {
-        isTransitioning = true;
+    if (wasMobile !== isMobile) {
+        // Save current state before reloading
+        const state = {};
 
-        // Show loading state
-        const loadingMsg = document.createElement('div');
-        loadingMsg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);color:#fff;padding:20px 40px;border-radius:8px;z-index:9999;font-size:16px;';
-        loadingMsg.innerHTML = '<div style="text-align:center;">Switching to ' + (isMobile ? 'mobile' : 'desktop') + ' mode...</div><div style="margin-top:10px;text-align:center;"><div style="border:3px solid #f3f3f3;border-top:3px solid #1db954;border-radius:50%;width:30px;height:30px;animation:spin 1s linear infinite;display:inline-block;"></div></div><style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>';
-        document.body.appendChild(loadingMsg);
-
-        // Get current playback position
-        const currentTime = ytPlayer.getCurrentTime ? ytPlayer.getCurrentTime() : 0;
-        const wasPlaying = ytPlayer.getPlayerState ? ytPlayer.getPlayerState() === YT.PlayerState.PLAYING : false;
-
-        // Move video to new position
-        initializeVideoPosition();
-
-        // Wait a bit for DOM to settle
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Restart playback at same position
-        if (currentTime > 0) {
-            ytPlayer.seekTo(currentTime);
-            if (wasPlaying) {
-                ytPlayer.playVideo();
-            }
+        if (currentPlaylist) {
+            state.viewedPlaylistName = currentPlaylist.name;
         }
 
-        // Remove loading message
-        setTimeout(() => {
-            document.body.removeChild(loadingMsg);
-            isTransitioning = false;
-        }, 800);
+        if (playingPlaylist && currentQueue.length > 0 && currentQueueIndex >= 0) {
+            state.playingPlaylistName = playingPlaylist.name;
+            state.currentQueueIndex = currentQueueIndex;
+            state.currentTime = (ytPlayer && ytPlayer.getCurrentTime) ? ytPlayer.getCurrentTime() : 0;
+        }
+
+        sessionStorage.setItem('jackify_reload_state', JSON.stringify(state));
+        location.reload();
+        return;
     }
 
     lastWidth = currentWidth;

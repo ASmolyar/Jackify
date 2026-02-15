@@ -1030,6 +1030,17 @@ body {
         display: none;
     }
 
+    /* Hide Album and Date added header labels on mobile */
+    .track-list-header span:nth-child(3),
+    .track-list-header span:nth-child(4) {
+        display: none;
+    }
+
+    /* Align Title header with track text (past the album art) */
+    .track-list-header span:nth-child(2) {
+        padding-left: 64px;
+    }
+
     /* Override hide-date-column on mobile */
     .playlist-tracks.hide-date-column .track-list-header,
     .playlist-tracks.hide-date-column .track-row {
