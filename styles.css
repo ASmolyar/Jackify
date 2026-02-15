@@ -1518,7 +1518,7 @@ body {
 
     /* Hide video on mobile, show album art instead */
     .now-playing-video {
-        display: none;
+        display: none !important;
     }
 
     .now-playing-placeholder-art {
