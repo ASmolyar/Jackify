@@ -8,6 +8,7 @@
     "generate-config": "node generate-blob-config.js"
   },
   "dependencies": {
-    "@vercel/blob": "^0.24.1"
+    "@vercel/blob": "^0.24.1",
+    "yt-search": "^2.13.1"
   }
 }

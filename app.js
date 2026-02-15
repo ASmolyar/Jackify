@@ -290,6 +290,7 @@ function init() {
     renderSidebar();
     setupSearch();
     setupFilters();
+    setupViewToggle();
 }
 
 // Setup filter buttons
@@ -307,6 +308,32 @@ function setupFilters() {
             renderPlaylistGrid();
             renderSidebar();
         });
+    });
+}
+
+// Setup view toggle button
+function setupViewToggle() {
+    const toggleBtn = document.getElementById('viewToggleBtn');
+    const playlistGrid = document.getElementById('playlistGrid');
+    const gridIcon = toggleBtn?.querySelector('.grid-icon');
+    const listIcon = toggleBtn?.querySelector('.list-icon');
+
+    if (!toggleBtn) return;
+
+    let isGridView = false;
+
+    toggleBtn.addEventListener('click', () => {
+        isGridView = !isGridView;
+
+        if (isGridView) {
+            playlistGrid.classList.add('grid-view');
+            gridIcon.style.display = 'none';
+            listIcon.style.display = 'block';
+        } else {
+            playlistGrid.classList.remove('grid-view');
+            gridIcon.style.display = 'block';
+            listIcon.style.display = 'none';
+        }
     });
 }
 

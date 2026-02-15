@@ -68,6 +68,52 @@
             </div>
         </header>
 
+        <!-- Mobile Library Header -->
+        <div class="mobile-library-header">
+            <div class="mobile-library-title">
+                <h1>Your Library</h1>
+                <div class="mobile-header-actions">
+                    <button class="mobile-action-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 1 0 1.414-1.414l-4.344-4.344a9.157 9.157 0 0 0 2.077-5.816c0-5.14-4.226-9.28-9.407-9.28zm-7.407 9.279c0-4.006 3.302-7.28 7.407-7.28s7.407 3.274 7.407 7.28-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.28z"/>
+                        </svg>
+                    </button>
+                    <button class="mobile-action-btn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-library-filters">
+                <button class="mobile-filter-chip">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8.5 1.75a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM5 5.25a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0zm6.5 6.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm-3.5 3.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                    </svg>
+                </button>
+                <button class="mobile-filter-chip active" data-filter="all">Playlists</button>
+                <button class="mobile-filter-chip" data-filter="playlists">Podcasts</button>
+                <button class="mobile-filter-chip" data-filter="madeForYou">Álbumes</button>
+                <button class="mobile-filter-chip" data-filter="artists">Artistas</button>
+            </div>
+            <div class="mobile-library-sort">
+                <button class="sort-btn">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M15 14.5H5V13h10v1.5zm0-5.75H5v-1.5h10v1.5zM15 3H5V1.5h10V3zM3 3H1V1.5h2V3zm0 11.5H1V13h2v1.5zm0-5.75H1v-1.5h2v1.5z"/>
+                    </svg>
+                    <span>Recientes</span>
+                </button>
+                <button class="view-toggle-btn" id="viewToggleBtn" title="Toggle grid view">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="grid-icon">
+                        <path d="M0 0h6v6H0V0zm2 2v2h2V2H2zm8-2h6v6h-6V0zm2 2v2h2V2h-2zM0 10h6v6H0v-6zm2 2v2h2v-2H2zm8-2h6v6h-6v-6zm2 2v2h2v-2h-2z"/>
+                    </svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" class="list-icon" style="display: none;">
+                        <path d="M15 14.5H5V13h10v1.5zm0-5.75H5v-1.5h10v1.5zM15 3H5V1.5h10V3zM3 3H1V1.5h2V3zm0 11.5H1V13h2v1.5zm0-5.75H1v-1.5h2v1.5z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
         <!-- Home View -->
         <div class="view" id="homeView">
             <section class="greeting-section">

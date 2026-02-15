@@ -227,6 +227,10 @@ body {
 
 .topbar-mobile-logo {
     display: none;
+}
+
+.mobile-library-header {
+    display: none;
     align-items: center;
 }
 
@@ -1652,5 +1656,178 @@ body {
 
     .playlist-card {
         padding: 8px 16px;
+    }
+
+    /* Mobile Library Header */
+    .mobile-library-header {
+        display: block;
+        position: sticky;
+        top: var(--topbar-height);
+        z-index: 10;
+        background: var(--bg-base);
+        padding: 16px 16px 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .mobile-library-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .mobile-library-title h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .mobile-header-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .mobile-action-btn {
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        padding: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background 0.2s;
+    }
+
+    .mobile-action-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-library-filters {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        margin-bottom: 12px;
+    }
+
+    .mobile-library-filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mobile-filter-chip {
+        background: var(--bg-surface);
+        border: none;
+        color: var(--text-primary);
+        padding: 8px 12px;
+        border-radius: 16px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .mobile-filter-chip.active {
+        background: var(--text-primary);
+        color: var(--bg-base);
+    }
+
+    .mobile-filter-chip:hover {
+        background: var(--bg-highlight);
+    }
+
+    .mobile-filter-chip.active:hover {
+        background: var(--text-primary);
+    }
+
+    .mobile-library-sort {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .sort-btn {
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        padding: 4px 0;
+    }
+
+    .view-toggle-btn {
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        padding: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+
+    .view-toggle-btn:hover {
+        opacity: 1;
+    }
+
+    /* Grid View */
+    .playlist-grid.grid-view {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .playlist-grid.grid-view .playlist-card {
+        flex-direction: column;
+        padding: 0;
+        background: none;
+        gap: 8px;
+    }
+
+    .playlist-grid.grid-view .playlist-card:hover {
+        background: none;
+    }
+
+    .playlist-grid.grid-view .playlist-image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        margin: 0;
+    }
+
+    .playlist-grid.grid-view .playlist-info {
+        padding: 0;
+    }
+
+    .playlist-grid.grid-view .playlist-name {
+        font-size: 13px;
+        font-weight: 500;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.3;
+    }
+
+    .playlist-grid.grid-view .playlist-meta {
+        display: none;
+    }
+
+    .playlist-grid.grid-view .card-play-btn {
+        display: none;
     }
 }
