@@ -1380,9 +1380,9 @@ body {
         width: 60px;
     }
 
-    /* Switch grid to list view on mobile */
+    /* Default: List view on mobile */
     .playlist-grid {
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         gap: 0;
         padding-top: 16px;
@@ -1430,6 +1430,64 @@ body {
     .card-subtitle {
         font-size: 14px;
         -webkit-line-clamp: 1;
+    }
+
+    /* Grid View on mobile */
+    .playlist-grid.grid-view {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 16px 12px;
+    }
+
+    .playlist-grid.grid-view .playlist-card {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        background: none;
+        gap: 6px;
+        align-items: flex-start;
+    }
+
+    .playlist-grid.grid-view .playlist-card:hover {
+        background: none;
+    }
+
+    .playlist-grid.grid-view .card-img-wrapper {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        margin: 0;
+        border-radius: 4px;
+    }
+
+    .playlist-grid.grid-view .card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .playlist-grid.grid-view .playlist-card-info {
+        width: 100%;
+        padding: 0;
+    }
+
+    .playlist-grid.grid-view .card-title {
+        font-size: 11px;
+        font-weight: 500;
+        margin-bottom: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 1.3;
+    }
+
+    .playlist-grid.grid-view .card-subtitle {
+        display: none;
+    }
+
+    .playlist-grid.grid-view .card-play-btn {
+        display: none;
     }
 }
 
@@ -1779,58 +1837,5 @@ body {
 
     .view-toggle-btn:hover {
         opacity: 1;
-    }
-
-    /* Grid View */
-    .playlist-grid.grid-view {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 4px;
-        padding: 16px 8px;
-    }
-
-    .playlist-grid.grid-view .playlist-card {
-        flex-direction: column;
-        padding: 0;
-        background: none;
-        gap: 4px;
-    }
-
-    .playlist-grid.grid-view .playlist-card:hover {
-        background: none;
-    }
-
-    .playlist-grid.grid-view .playlist-image,
-    .playlist-grid.grid-view .card-img-wrapper {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 1;
-        margin: 0;
-        border-radius: 4px;
-    }
-
-    .playlist-grid.grid-view .playlist-card-info,
-    .playlist-grid.grid-view .playlist-info {
-        padding: 0;
-    }
-
-    .playlist-grid.grid-view .card-title,
-    .playlist-grid.grid-view .playlist-name {
-        font-size: 11px;
-        font-weight: 500;
-        text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        line-height: 1.4;
-    }
-
-    .playlist-grid.grid-view .card-subtitle,
-    .playlist-grid.grid-view .playlist-meta {
-        display: none;
-    }
-
-    .playlist-grid.grid-view .card-play-btn {
-        display: none;
     }
 }
