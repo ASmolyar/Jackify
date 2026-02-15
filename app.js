@@ -489,7 +489,13 @@ async function renderPlaylistDetail(p) {
         tracks.appendChild(headerRow);
 
         // Track rows
-        trackData.forEach((track, idx) => {
+        let trackNumber = 1;
+        trackData.forEach((track) => {
+            // Skip tracks with empty names (deleted/unavailable tracks)
+            if (!track.name || track.name.trim() === '') {
+                return;
+            }
+
             const row = document.createElement('div');
             row.className = 'track-row';
             // Use playlist date if track was added on Feb 16, 2025
@@ -500,7 +506,7 @@ async function renderPlaylistDetail(p) {
             const addedDate = trackAddedDate ? formatDate(trackAddedDate) : '';
             const formattedArtist = track.artist.replace(/;/g, ', ');
             row.innerHTML = `
-                <span class="track-num">${idx + 1}</span>
+                <span class="track-num">${trackNumber}</span>
                 <div class="track-info">
                     <img class="track-img" src="" alt="" data-track-id="${track.trackId}" style="display:none;">
                     <div class="track-name-artist">
@@ -518,6 +524,8 @@ async function renderPlaylistDetail(p) {
             if (track.trackId) {
                 fetchAlbumArt(track.trackId, row.querySelector('.track-img'));
             }
+
+            trackNumber++;
         });
     } catch (e) {
         // Fallback: show Open in Spotify link
