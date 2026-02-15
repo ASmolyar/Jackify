@@ -449,9 +449,9 @@ function goHome() {
     document.getElementById('playlistView').classList.add('hidden');
     document.getElementById('backBtn').disabled = true;
 
-    // Show mobile library header when returning home
+    // Show mobile library header when returning home (only on mobile via CSS)
     const mobileHeader = document.querySelector('.mobile-library-header');
-    if (mobileHeader) mobileHeader.style.display = 'block';
+    if (mobileHeader) mobileHeader.style.display = '';
 
     renderSidebar();
 }
