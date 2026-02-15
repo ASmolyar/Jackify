@@ -1,12 +1,12 @@
 // Playlist data
 const playlists = [
     { name: "Liked Songs", url: "https://open.spotify.com/collection/tracks", img: null, songs: 241, date: "2021-10-26", subtitle: null, isLiked: true },
-    { name: "Repeat Rewind", url: "https://open.spotify.com/playlist/2H4u1iNige1NX86pEWBcPv", img: "pfps/Repeat Rewind.jpg", songs: 30, date: "2025-12-01", subtitle: null, description: "This playlist was collected posthumously." },
-    { name: "On Repeat", url: "https://open.spotify.com/playlist/49YeV4mj1uXMMi8FIu97V7", img: "pfps/On Repeat.jpeg", songs: 30, date: "2025-12-01", subtitle: null, description: "This playlist was collected posthumously." },
-    { name: "Your Top Songs 2022", url: "https://open.spotify.com/playlist/0yhPPOU0ZTLELil0deZEiH", img: "pfps/Your Top Songs 2022.jpeg", songs: 101, date: "2022-12-01", subtitle: null },
-    { name: "Your Top Songs 2023", url: "https://open.spotify.com/playlist/7qt2dWTQGyxGgamEvn8H0R", img: "pfps/Your Top Songs 2023.jpg", songs: 100, date: "2023-12-01", subtitle: null },
-    { name: "Your Top Songs 2024", url: "https://open.spotify.com/playlist/51WeFWEG5W7RuoB9q4v83q", img: "pfps/Your Top Songs 2024.jpeg", songs: 100, date: "2024-12-01", subtitle: null },
-    { name: "Your Top Songs 2025", url: "https://open.spotify.com/playlist/2kG3P3jLUlualM0r8oZ1Ch", img: "pfps/Your Top Songs 2025.jpeg", songs: 100, date: "2025-12-01", subtitle: null },
+    { name: "On Repeat", url: "https://open.spotify.com/playlist/49YeV4mj1uXMMi8FIu97V7", img: "pfps/On Repeat.jpeg", songs: 30, date: "2025-12-18", subtitle: null, description: "This playlist was collected posthumously.", category: "madeForYou", author: "Spotify" },
+    { name: "Repeat Rewind", url: "https://open.spotify.com/playlist/2H4u1iNige1NX86pEWBcPv", img: "pfps/Repeat Rewind.jpg", songs: 30, date: "2025-12-18", subtitle: null, description: "This playlist was collected posthumously.", category: "madeForYou", author: "Spotify" },
+    { name: "Your Top Songs 2022", url: "https://open.spotify.com/playlist/0yhPPOU0ZTLELil0deZEiH", img: "pfps/Your Top Songs 2022.jpeg", songs: 101, date: "2022-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
+    { name: "Your Top Songs 2023", url: "https://open.spotify.com/playlist/7qt2dWTQGyxGgamEvn8H0R", img: "pfps/Your Top Songs 2023.jpg", songs: 100, date: "2023-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
+    { name: "Your Top Songs 2024", url: "https://open.spotify.com/playlist/51WeFWEG5W7RuoB9q4v83q", img: "pfps/Your Top Songs 2024.jpeg", songs: 100, date: "2024-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
+    { name: "Your Top Songs 2025", url: "https://open.spotify.com/playlist/2kG3P3jLUlualM0r8oZ1Ch", img: "pfps/Your Top Songs 2025.jpeg", songs: 100, date: "2025-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
     { name: "it just means more", url: "https://open.spotify.com/playlist/5sPfoo3F9LwNsq1pRNFjGR", img: "pfps/it just means more.jpeg", songs: 6, date: "2024-05-16", subtitle: null },
     { name: "night into day", url: "https://open.spotify.com/playlist/59VUVVewEo6b5jxUdvW9FJ", img: "pfps/night into day.jpeg", songs: 23, date: "2023-06-15", subtitle: null },
     { name: "Spring '22", url: "https://open.spotify.com/playlist/4mgL620ffxj4VYuviRl4F8", img: "pfps/Spring '22.jpeg", songs: 81, date: "2022-04-01", subtitle: null },
@@ -105,6 +105,7 @@ const playlists = [
 let currentView = 'home';
 let currentPlaylist = null;
 let searchTerm = '';
+let currentFilter = 'all';
 
 // Format date
 function formatDate(dateStr) {
@@ -120,25 +121,18 @@ function formatDuration(ms) {
     return `${min}:${sec.toString().padStart(2, '0')}`;
 }
 
-// Fetch album artwork from Spotify
-async function fetchAlbumArt(trackId, imgElement) {
+// Load album artwork from local folder
+function fetchAlbumArt(trackId, imgElement) {
     if (!trackId || !imgElement) return;
 
-    try {
-        // Use Spotify's public oEmbed endpoint (no auth required)
-        const response = await fetch(`https://open.spotify.com/oembed?url=spotify:track:${trackId}`);
-        const data = await response.json();
-
-        // Extract thumbnail URL from oEmbed response
-        if (data.thumbnail_url) {
-            imgElement.src = data.thumbnail_url;
-        } else {
-            imgElement.style.display = 'none';
-        }
-    } catch (error) {
-        console.error('Error fetching album art:', error);
+    // Use local album art
+    imgElement.src = `album-art/${trackId}.jpg`;
+    imgElement.onload = () => {
+        imgElement.style.display = 'block';
+    };
+    imgElement.onerror = () => {
         imgElement.style.display = 'none';
-    }
+    };
 }
 
 // CSV filename mapping
@@ -152,20 +146,11 @@ function getCSVFilename(playlistName) {
         "I'm a crepe I'm a weirdough": "I'm_a_crepe_I'm_a_weirdough_.csv",
         "ript": "ript_.csv",
         "\u{1F3C4} \u{1F3B8}": "\u{1F3C4}_\u{1F3B8}_.csv",
-        "\u201Ccrackle barrel \u201D": '"crackle_barrel_".csv',
-        "Spring '22": "Spring_'22.csv",
-        "Mom's Jams": "Mom's_Jams.csv",
-        "idk what they're saying but it's funky fresh (my version)": "idk_what_they're_saying_but_it's_funky_fresh_(my_version).csv",
-        "Winter '22": "Winter_'22.csv",
-        "Late Summer '22": "Late_Summer_'22.csv",
-        "textbook panderin'": "textbook_panderin'.csv",
-        "barn dancing isn't real": "barn_dancing_isn't_real.csv",
-        "Boys Summer '22": "Boys_Summer_'22.csv",
-        "from the soul": "from_the_soul.csv",
-        "Early Summer '22": "Early_Summer_'22.csv"
+        "\u201Ccrackle barrel \u201D": '"crackle_barrel_".csv'
     };
     if (overrides[playlistName] !== undefined) return overrides[playlistName];
-    return playlistName.replaceAll(" ", "_") + ".csv";
+    // Convert regular apostrophes to left single quotation marks to match filenames
+    return playlistName.replaceAll(" ", "_").replaceAll("'", "'") + ".csv";
 }
 
 // CSV parser (handles quoted fields with commas)
@@ -250,6 +235,25 @@ function init() {
     renderPlaylistGrid();
     renderSidebar();
     setupSearch();
+    setupFilters();
+}
+
+// Setup filter buttons
+function setupFilters() {
+    const filterButtons = document.querySelectorAll('.filter-chip');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all buttons
+            filterButtons.forEach(b => b.classList.remove('active'));
+            // Add active class to clicked button
+            btn.classList.add('active');
+            // Update current filter
+            currentFilter = btn.dataset.filter;
+            // Re-render
+            renderPlaylistGrid();
+            renderSidebar();
+        });
+    });
 }
 
 // Render playlist grid
@@ -257,9 +261,19 @@ function renderPlaylistGrid() {
     const grid = document.getElementById('playlistGrid');
     grid.innerHTML = '';
 
-    const filtered = searchTerm
-        ? playlists.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
-        : playlists;
+    let filtered = playlists;
+
+    // Apply search filter
+    if (searchTerm) {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+
+    // Apply category filter
+    if (currentFilter === 'playlists') {
+        filtered = filtered.filter(p => !p.category || p.category !== 'madeForYou');
+    } else if (currentFilter === 'madeForYou') {
+        filtered = filtered.filter(p => p.category === 'madeForYou');
+    }
 
     filtered.forEach((p, i) => {
         const card = document.createElement('div');
@@ -276,7 +290,8 @@ function renderPlaylistGrid() {
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="#b3b3b3"><path d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v12.167a3.5 3.5 0 1 1-3.5-3.5H6V3z"/></svg>
                    </div>`;
 
-        const subtitleText = p.subtitle || `Playlist \u00B7 Jack Dutton`;
+        const author = p.author || 'Jack Dutton';
+        const subtitleText = p.subtitle || `Playlist \u00B7 ${author}`;
 
         card.innerHTML = `
             <div class="card-img-wrapper">
@@ -297,7 +312,17 @@ function renderPlaylistGrid() {
 function renderSidebar() {
     const list = document.getElementById('sidebarList');
     list.innerHTML = '';
-    playlists.forEach(p => {
+
+    let filtered = playlists;
+
+    // Apply category filter
+    if (currentFilter === 'playlists') {
+        filtered = filtered.filter(p => !p.category || p.category !== 'madeForYou');
+    } else if (currentFilter === 'madeForYou') {
+        filtered = filtered.filter(p => p.category === 'madeForYou');
+    }
+
+    filtered.forEach(p => {
         const item = document.createElement('div');
         item.className = 'library-item' + (currentPlaylist === p ? ' active' : '');
         item.onclick = () => openPlaylist(p);
@@ -308,11 +333,12 @@ function renderSidebar() {
                </div>`
             : `<img class="library-item-img" src="${p.img ? encodeImgPath(p.img) : ''}" alt="" onerror="handleImgError(this)">`;
 
+        const author = p.author || 'Jack Dutton';
         item.innerHTML = `
             ${imgHtml}
             <div class="library-item-info">
                 <div class="library-item-title">${escHtml(p.name)}</div>
-                <div class="library-item-meta">Playlist \u00B7 Jack Dutton</div>
+                <div class="library-item-meta">Playlist \u00B7 ${author}</div>
             </div>
         `;
         list.appendChild(item);
@@ -369,6 +395,7 @@ async function renderPlaylistDetail(p) {
             ? `<div class="playlist-description">${escHtml(p.subtitle)}</div>`
             : '';
 
+    const author = p.author || 'Jack Dutton';
     header.innerHTML = `
         <div class="playlist-header-bg" style="background: linear-gradient(180deg, ${getHeaderColor(p)} 0%, var(--bg-elevated) 100%);"></div>
         ${imgHtml}
@@ -377,7 +404,7 @@ async function renderPlaylistDetail(p) {
             <h1 class="playlist-detail-title ${titleClass}">${escHtml(p.name)}</h1>
             ${descHtml}
             <div class="playlist-meta">
-                <span class="playlist-meta-owner">Jack Dutton</span>
+                <span class="playlist-meta-owner">${author}</span>
                 <span class="playlist-meta-dot">\u00B7</span>
                 <span class="playlist-meta-detail">${p.songs} song${p.songs !== 1 ? 's' : ''}${p.date ? ', ' + formatDate(p.date) : ''}</span>
             </div>
@@ -434,12 +461,17 @@ async function renderPlaylistDetail(p) {
         trackData.forEach((track, idx) => {
             const row = document.createElement('div');
             row.className = 'track-row';
-            const addedDate = track.addedAt ? formatDate(track.addedAt.split('T')[0]) : '';
+            // Use playlist date if track was added on Feb 16, 2025
+            let trackAddedDate = track.addedAt ? track.addedAt.split('T')[0] : '';
+            if (trackAddedDate === '2025-02-16' && p.date) {
+                trackAddedDate = p.date;
+            }
+            const addedDate = trackAddedDate ? formatDate(trackAddedDate) : '';
             const formattedArtist = track.artist.replace(/;/g, ', ');
             row.innerHTML = `
                 <span class="track-num">${idx + 1}</span>
                 <div class="track-info">
-                    <img class="track-img" src="" alt="" data-track-id="${track.trackId}">
+                    <img class="track-img" src="" alt="" data-track-id="${track.trackId}" style="display:none;">
                     <div class="track-name-artist">
                         <div class="track-name">${escHtml(track.name)}</div>
                         <div class="track-artist">${escHtml(formattedArtist)}</div>
@@ -576,11 +608,14 @@ function initYouTubePlayer() {
         width: '100%',
         playerVars: {
             autoplay: 0,
-            controls: 0,
+            controls: 1,
             modestbranding: 1,
             rel: 0,
             showinfo: 0,
-            playsinline: 1
+            playsinline: 1,
+            iv_load_policy: 3,
+            cc_load_policy: 0,
+            fs: 1
         }
     });
 }
