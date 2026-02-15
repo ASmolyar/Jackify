@@ -562,6 +562,20 @@ body {
     background: hsla(0,0%,100%,.1);
 }
 
+/* Hide date column for Spotify playlists */
+.playlist-tracks.hide-date-column .track-list-header,
+.playlist-tracks.hide-date-column .track-row {
+    grid-template-columns: 16px 4fr 2fr 1fr;
+}
+
+.playlist-tracks.hide-date-column .track-added {
+    display: none;
+}
+
+.playlist-tracks.hide-date-column .track-list-header span:nth-child(4) {
+    display: none;
+}
+
 .track-num {
     color: var(--text-secondary);
     font-size: 14px;

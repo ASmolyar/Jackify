@@ -457,6 +457,13 @@ async function renderPlaylistDetail(p) {
         const loading = tracks.querySelector('.track-loading');
         if (loading) loading.remove();
 
+        // Hide date column for Spotify playlists
+        if (p.author === 'Spotify') {
+            tracks.classList.add('hide-date-column');
+        } else {
+            tracks.classList.remove('hide-date-column');
+        }
+
         if (trackData.length === 0) {
             tracks.innerHTML += `
                 <a class="open-spotify-link" href="${p.url}" target="_blank" rel="noopener">
