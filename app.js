@@ -1148,11 +1148,8 @@ function toggleExpandedView() {
         // Show expanded view
         expandedView.classList.remove('hidden');
 
-        // Move YouTube iframe to expanded container
-        const ytPlayerIframe = ytPlayer ? ytPlayer.getIframe() : null;
-        if (ytPlayerIframe) {
-            expandedVideoContainer.appendChild(ytPlayerIframe);
-        }
+        // Visually reposition video to expanded position (no DOM manipulation - seamless playback)
+        nowPlayingVideoOriginal.classList.add('expanded-position');
 
         // Update expanded view content
         updateExpandedViewContent();
@@ -1167,11 +1164,8 @@ function toggleExpandedView() {
         // Hide expanded view
         expandedView.classList.add('hidden');
 
-        // Move YouTube iframe back to compact bar
-        const ytPlayerIframe = ytPlayer ? ytPlayer.getIframe() : null;
-        if (ytPlayerIframe) {
-            nowPlayingVideoOriginal.appendChild(ytPlayerIframe);
-        }
+        // Return video to compact bar position
+        nowPlayingVideoOriginal.classList.remove('expanded-position');
     }
 }
 
