@@ -1106,6 +1106,16 @@ document.getElementById('prevBtn').addEventListener('click', playPrevious);
 document.getElementById('shuffleBtn').addEventListener('click', toggleShuffle);
 document.getElementById('volumeBtn').addEventListener('click', toggleMute);
 
+// Mobile Spotify button
+document.getElementById('mobileSpotifyBtn').addEventListener('click', () => {
+    if (currentQueue.length > 0 && currentQueueIndex >= 0) {
+        const track = currentQueue[currentQueueIndex];
+        if (track && track.trackId) {
+            window.open(`https://open.spotify.com/track/${track.trackId}`, '_blank');
+        }
+    }
+});
+
 // Progress bar click
 document.getElementById('progressTrack').addEventListener('click', (e) => {
     const rect = e.currentTarget.getBoundingClientRect();

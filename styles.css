@@ -1437,17 +1437,19 @@ body {
     .now-playing-bar {
         padding: 0;
         height: 80px;
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        align-items: flex-start;
         gap: 0;
         position: relative;
     }
 
     .now-playing-left {
         min-width: 0;
-        width: 100%;
-        padding: 8px 12px;
+        flex: 1;
+        padding: 8px 0 0 12px;
         gap: 12px;
+        position: relative;
+        z-index: 1;
     }
 
     .now-playing-center {
@@ -1458,10 +1460,17 @@ body {
         max-width: none;
         padding: 0;
         gap: 0;
+        z-index: 0;
     }
 
     .now-playing-right {
-        display: none;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 8px 12px 0 0;
+        min-width: auto;
+        position: relative;
+        z-index: 1;
     }
 
     .now-playing-video {
@@ -1478,11 +1487,9 @@ body {
     }
 
     .player-controls {
-        position: absolute;
-        right: 12px;
-        top: 20px;
-        transform: none;
+        display: flex;
         gap: 0;
+        position: static;
     }
 
     .control-btn {
@@ -1499,6 +1506,21 @@ body {
     #nextBtn,
     #shuffleBtn {
         display: none;
+    }
+
+    .volume-control {
+        display: none !important;
+    }
+
+    .mobile-spotify-btn {
+        display: flex !important;
+        width: 32px;
+        height: 32px;
+    }
+
+    .mobile-spotify-btn svg {
+        width: 20px;
+        height: 20px;
     }
 
     /* Simplified progress bar - non-interactive visual only */
