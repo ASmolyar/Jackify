@@ -146,17 +146,47 @@ function formatDuration(ms) {
     return `${min}:${sec.toString().padStart(2, '0')}`;
 }
 
-// Load album artwork from blob or local folder
-function fetchAlbumArt(trackId, imgElement) {
+// Load album artwork from Spotify oEmbed API
+async function fetchAlbumArt(trackId, imgElement) {
     if (!trackId || !imgElement) return;
 
-    imgElement.src = getImageUrl(`album-art/${trackId}.jpg`);
-    imgElement.onload = () => {
-        imgElement.style.display = 'block';
-    };
-    imgElement.onerror = () => {
+    try {
+        // Try blob storage first
+        const blobUrl = getImageUrl(`album-art/${trackId}.jpg`);
+        if (blobUrl.includes('blob.vercel-storage.com')) {
+            imgElement.src = blobUrl;
+            imgElement.onload = () => {
+                imgElement.style.display = 'block';
+            };
+            imgElement.onerror = async () => {
+                // Fallback to Spotify oEmbed
+                await fetchFromSpotifyOEmbed(trackId, imgElement);
+            };
+        } else {
+            // No blob storage, use Spotify oEmbed
+            await fetchFromSpotifyOEmbed(trackId, imgElement);
+        }
+    } catch (error) {
+        console.error('Error fetching album art:', error);
         imgElement.style.display = 'none';
-    };
+    }
+}
+
+async function fetchFromSpotifyOEmbed(trackId, imgElement) {
+    try {
+        const response = await fetch(`https://open.spotify.com/oembed?url=spotify:track:${trackId}`);
+        if (!response.ok) throw new Error('oEmbed fetch failed');
+
+        const data = await response.json();
+        if (data.thumbnail_url) {
+            imgElement.src = data.thumbnail_url;
+            imgElement.style.display = 'block';
+        } else {
+            imgElement.style.display = 'none';
+        }
+    } catch (error) {
+        imgElement.style.display = 'none';
+    }
 }
 
 // CSV filename mapping
