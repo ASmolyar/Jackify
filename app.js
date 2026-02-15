@@ -765,7 +765,10 @@ function initYouTubePlayer() {
 }
 
 // Check on page load
-document.addEventListener('DOMContentLoaded', checkYouTubeAPI);
+document.addEventListener('DOMContentLoaded', () => {
+    checkYouTubeAPI();
+    initializeVideoPosition();
+});
 
 function onPlayerReady(event) {
     event.target.setVolume(currentVolume);
@@ -1317,15 +1320,18 @@ const nowPlayingLeft = document.querySelector('.now-playing-left');
 
 // Toggle expanded view
 function toggleExpandedView() {
+    const isMobile = window.innerWidth <= 600;
+
+    if (!isMobile) {
+        // Don't expand on desktop
+        return;
+    }
+
     isExpanded = !isExpanded;
 
     if (isExpanded) {
-        // Show expanded view
+        // On mobile, just show the expanded view (video already there)
         expandedView.classList.remove('hidden');
-
-        // Move video to expanded container
-        expandedVideoContainer.appendChild(nowPlayingVideoOriginal);
-        nowPlayingVideoOriginal.classList.add('expanded-position');
 
         // Update expanded view content
         updateExpandedViewContent();
@@ -1339,12 +1345,74 @@ function toggleExpandedView() {
     } else {
         // Hide expanded view
         expandedView.classList.add('hidden');
-
-        // Move video back to compact bar (before album art)
-        nowPlayingLeft.insertBefore(nowPlayingVideoOriginal, nowPlayingLeft.firstChild.nextSibling);
-        nowPlayingVideoOriginal.classList.remove('expanded-position');
     }
 }
+
+// Initialize video position based on screen size
+function initializeVideoPosition() {
+    const isMobile = window.innerWidth <= 600;
+
+    if (isMobile) {
+        // On mobile, keep video in expanded container
+        if (nowPlayingVideoOriginal.parentElement !== expandedVideoContainer) {
+            expandedVideoContainer.appendChild(nowPlayingVideoOriginal);
+            nowPlayingVideoOriginal.classList.add('expanded-position');
+        }
+    } else {
+        // On desktop, keep video in compact bar
+        if (nowPlayingVideoOriginal.parentElement !== nowPlayingLeft) {
+            nowPlayingLeft.insertBefore(nowPlayingVideoOriginal, nowPlayingLeft.firstChild.nextSibling);
+            nowPlayingVideoOriginal.classList.remove('expanded-position');
+        }
+    }
+}
+
+// Handle responsive transitions
+let lastWidth = window.innerWidth;
+let isTransitioning = false;
+
+window.addEventListener('resize', async () => {
+    const currentWidth = window.innerWidth;
+    const wasMobile = lastWidth <= 600;
+    const isMobile = currentWidth <= 600;
+
+    // Detect desktop <-> mobile transition
+    if (wasMobile !== isMobile && ytPlayer && currentQueue.length > 0) {
+        isTransitioning = true;
+
+        // Show loading state
+        const loadingMsg = document.createElement('div');
+        loadingMsg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);color:#fff;padding:20px 40px;border-radius:8px;z-index:9999;font-size:16px;';
+        loadingMsg.innerHTML = '<div style="text-align:center;">Switching to ' + (isMobile ? 'mobile' : 'desktop') + ' mode...</div><div style="margin-top:10px;text-align:center;"><div style="border:3px solid #f3f3f3;border-top:3px solid #1db954;border-radius:50%;width:30px;height:30px;animation:spin 1s linear infinite;display:inline-block;"></div></div><style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>';
+        document.body.appendChild(loadingMsg);
+
+        // Get current playback position
+        const currentTime = ytPlayer.getCurrentTime ? ytPlayer.getCurrentTime() : 0;
+        const wasPlaying = ytPlayer.getPlayerState ? ytPlayer.getPlayerState() === YT.PlayerState.PLAYING : false;
+
+        // Move video to new position
+        initializeVideoPosition();
+
+        // Wait a bit for DOM to settle
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Restart playback at same position
+        if (currentTime > 0) {
+            ytPlayer.seekTo(currentTime);
+            if (wasPlaying) {
+                ytPlayer.playVideo();
+            }
+        }
+
+        // Remove loading message
+        setTimeout(() => {
+            document.body.removeChild(loadingMsg);
+            isTransitioning = false;
+        }, 800);
+    }
+
+    lastWidth = currentWidth;
+});
 
 // Update expanded view content
 function updateExpandedViewContent() {
