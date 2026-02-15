@@ -524,6 +524,30 @@ body {
     height: 24px;
 }
 
+.open-spotify-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--text-subdued);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-subdued);
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.open-spotify-btn:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+    transform: scale(1.06);
+}
+
+.open-spotify-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
 /* Track List */
 .track-list-header {
     display: grid;
@@ -560,6 +584,18 @@ body {
 
 .track-row:hover {
     background: hsla(0,0%,100%,.1);
+}
+
+.track-row.playing {
+    background: hsla(0,0%,100%,.15);
+}
+
+.track-row.playing .track-num {
+    color: var(--accent);
+}
+
+.track-row.playing .track-name {
+    color: var(--accent);
 }
 
 /* Hide date column for Spotify playlists */

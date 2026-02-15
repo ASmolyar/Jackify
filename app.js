@@ -438,9 +438,12 @@ async function renderPlaylistDetail(p) {
     // Controls + loading placeholder
     tracks.innerHTML = `
         <div class="playlist-controls">
-            <button class="play-large-btn" onclick="window.open('${p.url}', '_blank')">
+            <button class="play-large-btn" id="playPlaylistBtn">
                 <svg viewBox="0 0 24 24"><path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"/></svg>
             </button>
+            <a href="${p.url}" target="_blank" rel="noopener" class="open-spotify-btn" title="Open in Spotify">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22zm5.045 15.866a.686.686 0 0 1-.943.228c-2.584-1.578-5.834-1.935-9.663-1.06a.686.686 0 0 1-.306-1.337c4.19-.958 7.786-.546 10.684 1.226a.686.686 0 0 1 .228.943zm1.346-2.995a.858.858 0 0 1-1.18.282c-2.956-1.817-7.464-2.344-10.961-1.282a.858.858 0 0 1-.496-1.641c3.995-1.212 8.962-.625 12.357 1.462a.858.858 0 0 1 .28 1.179zm.116-3.119c-3.546-2.106-9.395-2.3-12.78-1.272a1.029 1.029 0 1 1-.597-1.969c3.886-1.18 10.345-.952 14.427 1.472a1.029 1.029 0 0 1-1.05 1.769z"/></svg>
+            </a>
         </div>
         <div class="track-loading" style="padding:0 32px;color:var(--text-secondary);font-size:14px;">Loading tracks...</div>
     `;
@@ -520,6 +523,24 @@ async function renderPlaylistDetail(p) {
             `;
             tracks.appendChild(row);
 
+            // Add click handler to play track
+            row.addEventListener('click', () => {
+                // Set up queue from current playlist if not already playing from it
+                if (!playingPlaylist || playingPlaylist.name !== p.name) {
+                    playingPlaylist = p;
+                    const validTracks = trackData.filter(t => t.name && t.name.trim() !== '');
+                    currentQueue = validTracks;
+                    if (isShuffled) {
+                        shuffleQueue();
+                    }
+                }
+                // Find track index in queue
+                const trackIndex = currentQueue.findIndex(t => t.name === track.name);
+                if (trackIndex >= 0) {
+                    playTrack(track, trackIndex);
+                }
+            });
+
             // Fetch album artwork
             if (track.trackId) {
                 fetchAlbumArt(track.trackId, row.querySelector('.track-img'));
@@ -527,6 +548,16 @@ async function renderPlaylistDetail(p) {
 
             trackNumber++;
         });
+
+        // Set up play playlist button
+        const playBtn = document.getElementById('playPlaylistBtn');
+        if (playBtn) {
+            playBtn.addEventListener('click', () => {
+                if (trackData.length > 0) {
+                    playPlaylist(p);
+                }
+            });
+        }
     } catch (e) {
         // Fallback: show Open in Spotify link
         const loading = tracks.querySelector('.track-loading');
@@ -608,6 +639,8 @@ const YOUTUBE_API_KEY = 'AIzaSyC0m1qpXOVu_RwavkPJ5ikgIYNH29go-gM';
 let ytPlayer = null;
 let currentQueue = [];
 let currentQueueIndex = -1;
+let playingPlaylist = null; // Track which playlist is currently playing
+let currentTrackElement = null; // Track the currently highlighted track row
 let isShuffled = false;
 let repeatMode = 'off'; // 'off', 'all', 'one'
 let currentVolume = 70;
@@ -720,6 +753,29 @@ async function playTrack(track, queueIndex = -1) {
 
     // Update now playing info
     updateNowPlayingInfo(track);
+
+    // Highlight current track in playlist
+    updateTrackHighlight(track);
+}
+
+// Update track highlighting
+function updateTrackHighlight(track) {
+    // Remove previous highlighting
+    if (currentTrackElement) {
+        currentTrackElement.classList.remove('playing');
+    }
+
+    // Find and highlight current track if we're viewing the playing playlist
+    if (playingPlaylist && currentPlaylist && playingPlaylist.name === currentPlaylist.name) {
+        const trackRows = document.querySelectorAll('.track-row');
+        trackRows.forEach(row => {
+            const trackName = row.querySelector('.track-name');
+            if (trackName && trackName.textContent === track.name) {
+                row.classList.add('playing');
+                currentTrackElement = row;
+            }
+        });
+    }
 }
 
 // Update now playing display
@@ -744,13 +800,18 @@ async function playPlaylist(playlist) {
             return;
         }
         const text = await resp.text();
-        const tracks = parseCSV(text);
+        const allTracks = parseCSV(text);
+
+        // Filter out empty tracks
+        const tracks = allTracks.filter(t => t.name && t.name.trim() !== '');
 
         if (tracks.length === 0) {
             console.error('No tracks in playlist');
             return;
         }
 
+        // Set the playing playlist
+        playingPlaylist = playlist;
         currentQueue = tracks;
         currentQueueIndex = 0;
 
