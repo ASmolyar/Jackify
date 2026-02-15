@@ -1532,7 +1532,6 @@ body {
     }
 
     .now-playing-album-art {
-        display: block !important;
         width: 56px;
         height: 56px;
     }
