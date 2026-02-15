@@ -8,6 +8,6 @@
     "generate-config": "node generate-blob-config.js"
   },
   "dependencies": {
-    "@vercel/blob": "^0.24.0"
+    "@vercel/blob": "^0.24.1"
   }
 }
