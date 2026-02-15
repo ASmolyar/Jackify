@@ -563,8 +563,6 @@ function escHtml(str) {
 function encodeImgPath(path) {
     // Split at pfps/ and encode the filename part, then use blob URL if available
     if (!path) return '';
-    // Normalize curly quotes to straight quotes
-    path = path.replace(/'/g, "'");
     const parts = path.split('/');
     const dir = parts.slice(0, -1).join('/');
     const file = parts[parts.length - 1];
