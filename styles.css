@@ -1434,8 +1434,8 @@ body {
 
     /* Grid View on mobile */
     .playlist-grid.grid-view {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr);
+        display: flex !important;
+        flex-wrap: wrap;
         gap: 12px;
         padding: 16px 12px;
     }
@@ -1447,7 +1447,9 @@ body {
         background: none;
         gap: 6px;
         align-items: flex-start;
-        width: 100%;
+        width: calc((100% - 24px) / 3); /* 3 columns with 12px gap between */
+        flex-shrink: 0;
+        box-sizing: border-box;
     }
 
     .playlist-grid.grid-view .playlist-card:hover {
