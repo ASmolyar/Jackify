@@ -295,10 +295,10 @@ function init() {
 
 // Setup filter buttons
 function setupFilters() {
-    const filterButtons = document.querySelectorAll('.filter-chip');
+    const filterButtons = document.querySelectorAll('.filter-chip, .mobile-filter-chip');
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Remove active class from all buttons
+            // Remove active class from all buttons (both desktop and mobile)
             filterButtons.forEach(b => b.classList.remove('active'));
             // Add active class to clicked button
             btn.classList.add('active');

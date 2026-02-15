@@ -1640,18 +1640,18 @@ body {
         border-radius: 0;
     }
 
-    /* Reduce padding on mobile */
-    .section {
-        padding: 16px 0 0;
-    }
-
+    /* Hide greeting and section header on mobile */
     .greeting-section {
-        padding: 16px 16px 0;
+        display: none;
     }
 
     .section-header {
-        padding: 0 16px;
-        margin-bottom: 8px;
+        display: none;
+    }
+
+    /* Reduce padding on mobile */
+    .section {
+        padding: 0;
     }
 
     .playlist-card {
