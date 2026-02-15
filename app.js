@@ -146,25 +146,36 @@ function formatDuration(ms) {
     return `${min}:${sec.toString().padStart(2, '0')}`;
 }
 
-// Load album artwork from Spotify oEmbed API
+// Load album artwork - try local first, fallback to Spotify oEmbed API
 async function fetchAlbumArt(trackId, imgElement) {
     if (!trackId || !imgElement) return;
 
-    try {
-        const response = await fetch(`https://open.spotify.com/oembed?url=spotify:track:${trackId}`);
-        if (!response.ok) throw new Error('oEmbed fetch failed');
+    // Try local file first
+    const localPath = `album-art/${trackId}.jpg`;
+    imgElement.src = localPath;
 
-        const data = await response.json();
-        if (data.thumbnail_url) {
-            imgElement.src = data.thumbnail_url;
-            imgElement.style.display = 'block';
-        } else {
+    imgElement.onload = () => {
+        imgElement.style.display = 'block';
+    };
+
+    imgElement.onerror = async () => {
+        // Local file not found, fetch from Spotify oEmbed API
+        try {
+            const response = await fetch(`https://open.spotify.com/oembed?url=spotify:track:${trackId}`);
+            if (!response.ok) throw new Error('oEmbed fetch failed');
+
+            const data = await response.json();
+            if (data.thumbnail_url) {
+                imgElement.src = data.thumbnail_url;
+                imgElement.style.display = 'block';
+            } else {
+                imgElement.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error fetching album art:', error);
             imgElement.style.display = 'none';
         }
-    } catch (error) {
-        console.error('Error fetching album art:', error);
-        imgElement.style.display = 'none';
-    }
+    };
 }
 
 // CSV filename mapping
