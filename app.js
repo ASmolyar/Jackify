@@ -796,13 +796,16 @@ function updatePlayPauseButton(isPlaying) {
 
 // Search YouTube for a track (with caching)
 async function searchYouTube(trackName, artistName) {
-    // Create cache key from track name and artist
-    const cacheKey = `yt_${trackName.toLowerCase()}_${artistName.toLowerCase()}`.replace(/\s+/g, '_');
+    // Create mapping key (without yt_ prefix, matches generation script)
+    const mappingKey = `${trackName.toLowerCase()}_${artistName.toLowerCase()}`.replace(/\s+/g, '_');
+
+    // Create cache key for localStorage (with yt_ prefix for backwards compatibility)
+    const cacheKey = `yt_${mappingKey}`;
 
     // Check pre-generated mappings first
-    if (videoMappings[cacheKey]) {
+    if (videoMappings[mappingKey]) {
         console.log('Using pre-mapped video ID for:', trackName);
-        return videoMappings[cacheKey];
+        return videoMappings[mappingKey];
     }
 
     // Check localStorage cache second
