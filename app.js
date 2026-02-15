@@ -7,6 +7,9 @@ fetch('blob-config.json')
     .then(config => {
         BLOB_BASE_URL = config.BLOB_BASE_URL;
         console.log('Using Vercel Blob storage:', BLOB_BASE_URL);
+        // Re-render playlists now that we have the blob URL
+        if (typeof renderPlaylistGrid === 'function') renderPlaylistGrid();
+        if (typeof renderSidebar === 'function') renderSidebar();
     })
     .catch(() => {
         console.log('Using local images (blob-config.json not found)');
