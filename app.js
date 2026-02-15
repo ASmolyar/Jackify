@@ -343,8 +343,10 @@ function renderPlaylistGrid() {
                     <svg viewBox="0 0 24 24"><path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"/></svg>
                 </button>
             </div>
-            <div class="card-title" title="${escHtml(p.name)}">${escHtml(p.name)}</div>
-            <div class="card-subtitle">${escHtml(subtitleText)}</div>
+            <div class="playlist-card-info">
+                <div class="card-title" title="${escHtml(p.name)}">${escHtml(p.name)}</div>
+                <div class="card-subtitle">${escHtml(subtitleText)}</div>
+            </div>
         `;
 
         grid.appendChild(card);
@@ -713,6 +715,7 @@ function onPlayerStateChange(event) {
 }
 
 function updatePlayPauseButton(isPlaying) {
+    // Update compact button
     const icon = document.getElementById('playPauseIcon');
     const btn = document.getElementById('playPauseBtn');
     if (isPlaying) {
@@ -723,6 +726,17 @@ function updatePlayPauseButton(isPlaying) {
         // Play icon
         icon.innerHTML = '<path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"/>';
         btn.title = 'Play';
+    }
+
+    // Update expanded button
+    const expandedBtn = document.getElementById('expandedPlayPauseBtn');
+    if (expandedBtn) {
+        const expandedSvg = expandedBtn.querySelector('svg');
+        if (isPlaying) {
+            expandedSvg.innerHTML = '<path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"/>';
+        } else {
+            expandedSvg.innerHTML = '<path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"/>';
+        }
     }
 }
 
@@ -809,6 +823,32 @@ function updateNowPlayingInfo(track) {
             <div class="now-playing-artist">${escHtml(formattedArtist)}</div>
         </div>
     `;
+
+    // Update now playing bar color
+    const nowPlayingBar = document.querySelector('.now-playing-bar');
+    const color = getNowPlayingColor(track);
+    nowPlayingBar.style.background = color;
+
+    // Update expanded view if it's showing
+    if (isExpanded) {
+        updateExpandedViewContent();
+        expandedView.style.background = `linear-gradient(180deg, ${color} 0%, var(--bg-elevated) 40%)`;
+    }
+}
+
+// Generate saturated color for now playing bar
+function getNowPlayingColor(track) {
+    // Generate color from track name + album for variety
+    let hash = 0;
+    const seed = track.name + track.album;
+    for (let i = 0; i < seed.length; i++) {
+        hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    // Higher saturation (60-80%) and moderate lightness (15-25%) for vibrant, dark color
+    const s = 60 + (Math.abs(hash >> 8) % 20);
+    const l = 15 + (Math.abs(hash >> 16) % 10);
+    return `hsl(${h}, ${s}%, ${l}%)`;
 }
 
 // Play playlist
@@ -981,9 +1021,21 @@ function updateProgress() {
 
     if (total > 0) {
         const percent = (current / total) * 100;
+
+        // Update compact progress bar
         document.getElementById('progressFill').style.width = percent + '%';
         document.getElementById('progressCurrent').textContent = formatDuration(current * 1000);
         document.getElementById('progressTotal').textContent = formatDuration(total * 1000);
+
+        // Update expanded progress bar if expanded
+        if (isExpanded) {
+            const expandedFill = document.querySelector('.expanded-progress-fill');
+            if (expandedFill) {
+                expandedFill.style.width = percent + '%';
+            }
+            document.getElementById('expandedProgressCurrent').textContent = formatDuration(current * 1000);
+            document.getElementById('expandedProgressTotal').textContent = formatDuration(total * 1000);
+        }
     }
 }
 
@@ -1047,6 +1099,114 @@ document.getElementById('volumeTrack').addEventListener('click', (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const percent = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
     setVolume(percent);
+});
+
+// ============================================
+// EXPANDED NOW PLAYING VIEW
+// ============================================
+
+let isExpanded = false;
+const expandedView = document.getElementById('nowPlayingExpanded');
+const nowPlayingBar = document.querySelector('.now-playing-bar');
+const nowPlayingVideoOriginal = document.getElementById('nowPlayingVideo');
+const expandedVideoContainer = document.getElementById('expandedVideoContainer');
+
+// Toggle expanded view
+function toggleExpandedView() {
+    isExpanded = !isExpanded;
+
+    if (isExpanded) {
+        // Show expanded view
+        expandedView.classList.remove('hidden');
+
+        // Move YouTube iframe to expanded container
+        const ytPlayerElement = document.getElementById('ytPlayer');
+        if (ytPlayerElement) {
+            expandedVideoContainer.appendChild(ytPlayerElement);
+        }
+
+        // Update expanded view content
+        updateExpandedViewContent();
+
+        // Set background color to match now playing bar
+        if (currentQueue.length > 0 && currentQueueIndex >= 0) {
+            const track = currentQueue[currentQueueIndex];
+            const color = getNowPlayingColor(track);
+            expandedView.style.background = `linear-gradient(180deg, ${color} 0%, var(--bg-elevated) 40%)`;
+        }
+    } else {
+        // Hide expanded view
+        expandedView.classList.add('hidden');
+
+        // Move YouTube iframe back to compact bar
+        const ytPlayerElement = document.getElementById('ytPlayer');
+        if (ytPlayerElement) {
+            nowPlayingVideoOriginal.appendChild(ytPlayerElement);
+        }
+    }
+}
+
+// Update expanded view content
+function updateExpandedViewContent() {
+    if (currentQueue.length === 0 || currentQueueIndex < 0) return;
+
+    const track = currentQueue[currentQueueIndex];
+    const formattedArtist = track.artist.replace(/;/g, ', ');
+
+    // Update title (playlist name)
+    document.getElementById('expandedTitle').textContent = playingPlaylist?.name || '';
+
+    // Update track info
+    document.querySelector('.expanded-track-name').textContent = track.name;
+    document.querySelector('.expanded-track-artist').textContent = formattedArtist;
+
+    // Update progress times
+    if (ytPlayer && ytPlayer.getDuration) {
+        const current = ytPlayer.getCurrentTime() || 0;
+        const total = ytPlayer.getDuration() || 0;
+        document.getElementById('expandedProgressCurrent').textContent = formatDuration(Math.floor(current));
+        document.getElementById('expandedProgressTotal').textContent = formatDuration(Math.floor(total));
+    }
+
+    // Sync shuffle button state
+    const expandedShuffleBtn = document.getElementById('expandedShuffleBtn');
+    if (isShuffled) {
+        expandedShuffleBtn.classList.add('active');
+    } else {
+        expandedShuffleBtn.classList.remove('active');
+    }
+}
+
+// Click on now playing bar to expand (except play button)
+nowPlayingBar.addEventListener('click', (e) => {
+    // Don't expand if clicking on a button or control
+    if (e.target.closest('button') || e.target.closest('.player-controls') || e.target.closest('.volume-control')) {
+        return;
+    }
+
+    // Only expand if something is playing
+    if (currentQueue.length > 0 && currentQueueIndex >= 0) {
+        toggleExpandedView();
+    }
+});
+
+// Back button to collapse
+document.getElementById('expandedBackBtn').addEventListener('click', toggleExpandedView);
+
+// Wire up expanded view controls
+document.getElementById('expandedPlayPauseBtn').addEventListener('click', togglePlayPause);
+document.getElementById('expandedNextBtn').addEventListener('click', playNext);
+document.getElementById('expandedPrevBtn').addEventListener('click', playPrevious);
+document.getElementById('expandedShuffleBtn').addEventListener('click', () => {
+    toggleShuffle();
+    updateExpandedViewContent();
+});
+
+// Expanded progress bar click
+document.getElementById('expandedProgressTrack').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    seekTo(percent);
 });
 
 
