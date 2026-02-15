@@ -666,7 +666,7 @@ document.addEventListener('DOMContentLoaded', init);
 // YOUTUBE PLAYBACK INTEGRATION
 // ============================================
 
-const YOUTUBE_API_KEY = 'AIzaSyAzpDMPQFGnadO9biVvJAlQmD9_OM7VKg8';
+const YOUTUBE_API_KEY = 'AIzaSyD0B2JvNBRFzCLW_A6DIKZvSS5JRJE-mEU';
 
 // Player state
 let ytPlayer = null;

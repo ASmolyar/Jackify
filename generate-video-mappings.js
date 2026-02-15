@@ -2,10 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-const YOUTUBE_API_KEY = 'AIzaSyAzpDMPQFGnadO9biVvJAlQmD9_OM7VKg8';
+const YOUTUBE_API_KEY = 'AIzaSyD0B2JvNBRFzCLW_A6DIKZvSS5JRJE-mEU'; // Fallback API key
 const PLAYLISTS_DIR = '/Users/aaronsmolyar/Documents/spotify_playlists/csvs';
 const OUTPUT_FILE = './video-mappings.json';
-const DELAY_MS = 100; // Delay between API calls to avoid rate limiting
+const DELAY_MS = 200; // Delay between requests to avoid rate limiting
 
 // Load existing mappings if they exist
 function loadExistingMappings() {
@@ -50,8 +50,8 @@ function extractSongsFromPlaylists() {
     return songs;
 }
 
-// Search YouTube for a video
-function searchYouTube(trackName, artistName) {
+// Search YouTube using API (fallback)
+function searchYouTubeAPI(trackName, artistName) {
     return new Promise((resolve, reject) => {
         const query = encodeURIComponent(`${trackName} ${artistName}`);
         const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&videoCategoryId=10&maxResults=1&key=${YOUTUBE_API_KEY}`;
@@ -63,7 +63,7 @@ function searchYouTube(trackName, artistName) {
                 try {
                     const result = JSON.parse(data);
                     if (result.error) {
-                        reject(new Error(`API Error: ${result.error.message}`));
+                        resolve(null); // API error, return null
                         return;
                     }
                     if (result.items && result.items.length > 0) {
@@ -72,10 +72,66 @@ function searchYouTube(trackName, artistName) {
                         resolve(null);
                     }
                 } catch (e) {
-                    reject(e);
+                    resolve(null);
                 }
             });
-        }).on('error', reject);
+        }).on('error', () => resolve(null));
+    });
+}
+
+// Search YouTube by scraping search results page
+async function searchYouTube(trackName, artistName) {
+    return new Promise((resolve, reject) => {
+        const query = encodeURIComponent(`${trackName} ${artistName}`);
+        const url = `https://www.youtube.com/results?search_query=${query}`;
+
+        const options = {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        };
+
+        https.get(url, options, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', async () => {
+                try {
+                    // Extract video IDs from the HTML
+                    const videoIdMatch = data.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
+
+                    if (videoIdMatch && videoIdMatch[1]) {
+                        resolve(videoIdMatch[1]);
+                    } else {
+                        // Fallback: try to find /watch?v= pattern
+                        const watchMatch = data.match(/\/watch\?v=([a-zA-Z0-9_-]{11})/);
+                        if (watchMatch && watchMatch[1]) {
+                            resolve(watchMatch[1]);
+                        } else {
+                            // Scraping failed, try API fallback
+                            console.log('    → Scraping failed, trying API...');
+                            const apiResult = await searchYouTubeAPI(trackName, artistName);
+                            resolve(apiResult);
+                        }
+                    }
+                } catch (e) {
+                    // On error, try API fallback
+                    try {
+                        const apiResult = await searchYouTubeAPI(trackName, artistName);
+                        resolve(apiResult);
+                    } catch (apiError) {
+                        resolve(null);
+                    }
+                }
+            });
+        }).on('error', async () => {
+            // Network error, try API fallback
+            try {
+                const apiResult = await searchYouTubeAPI(trackName, artistName);
+                resolve(apiResult);
+            } catch (apiError) {
+                resolve(null);
+            }
+        });
     });
 }
 
@@ -138,11 +194,7 @@ async function main() {
         } catch (error) {
             console.log(`  ✗ Error: ${error.message}`);
             failed++;
-
-            if (error.message.includes('quotaExceeded') || error.message.includes('403')) {
-                console.log('\n⚠️  API quota exceeded! Saving progress and stopping...');
-                break;
-            }
+            // Continue with next song
         }
     }
 
