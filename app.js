@@ -724,8 +724,21 @@ function updatePlayPauseButton(isPlaying) {
         btn.title = 'Pause';
     } else {
         // Play icon
-        icon.innerHTML = '<path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"/>';
+        icon.innerHTML = '<path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"/>';
         btn.title = 'Play';
+    }
+
+    // Update mobile button
+    const mobileBtn = document.getElementById('mobilePlayBtn');
+    if (mobileBtn) {
+        const mobileSvg = mobileBtn.querySelector('svg');
+        if (isPlaying) {
+            mobileSvg.innerHTML = '<path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"/>';
+            mobileBtn.title = 'Pause';
+        } else {
+            mobileSvg.innerHTML = '<path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"/>';
+            mobileBtn.title = 'Play';
+        }
     }
 
     // Update expanded button
@@ -823,6 +836,15 @@ function updateNowPlayingInfo(track) {
             <div class="now-playing-artist">${escHtml(formattedArtist)}</div>
         </div>
     `;
+
+    // Update album art
+    const albumArt = document.getElementById('nowPlayingAlbumArt');
+    if (track.trackId) {
+        const localPath = `album-art/${track.trackId}.jpg`;
+        albumArt.src = localPath;
+        albumArt.alt = track.album;
+        albumArt.style.display = 'block';
+    }
 
     // Update now playing bar color
     const nowPlayingBar = document.querySelector('.now-playing-bar');
@@ -1115,6 +1137,9 @@ document.getElementById('mobileSpotifyBtn').addEventListener('click', () => {
         }
     }
 });
+
+// Mobile play button
+document.getElementById('mobilePlayBtn').addEventListener('click', togglePlayPause);
 
 // Progress bar click
 document.getElementById('progressTrack').addEventListener('click', (e) => {

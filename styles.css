@@ -1058,6 +1058,15 @@ body {
     pointer-events: none;
 }
 
+/* Album art styling */
+.now-playing-album-art {
+    width: 100px;
+    height: 56px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
 /* Expanded video positioning - visually moves to center without DOM manipulation */
 .now-playing-video.expanded-position {
     position: fixed;
@@ -1071,6 +1080,7 @@ body {
     z-index: 1001;
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    display: block !important;
 }
 
 .now-playing-video.expanded-position iframe {
@@ -1227,23 +1237,9 @@ body {
 }
 
 .expanded-video-container {
-    width: 100%;
-    max-width: 400px;
-    aspect-ratio: 16 / 9;
-    background: #000;
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    display: none; /* Not used - video is repositioned from bottom bar */
 }
 
-.expanded-video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
 
 .expanded-track-info {
     text-align: center;
@@ -1490,13 +1486,19 @@ body {
         display: flex;
         align-items: center;
         gap: 16px;
-        padding: 8px 12px 0 0;
+        padding: 12px 12px 12px 0;
         min-width: auto;
         position: relative;
         z-index: 1;
     }
 
+    /* Hide video on mobile, show album art instead */
     .now-playing-video {
+        display: none;
+    }
+
+    .now-playing-album-art {
+        display: block !important;
         width: 56px;
         height: 56px;
     }
@@ -1544,6 +1546,27 @@ body {
     .mobile-spotify-btn svg {
         width: 20px;
         height: 20px;
+    }
+
+    .mobile-play-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: var(--text-primary);
+        color: #000;
+        border-radius: 50%;
+    }
+
+    .mobile-play-btn:hover {
+        transform: scale(1.06);
+        background: var(--text-primary);
+    }
+
+    .mobile-play-btn svg {
+        width: 14px;
+        height: 14px;
     }
 
     /* Simplified progress bar - non-interactive visual only */
