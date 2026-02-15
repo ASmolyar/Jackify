@@ -899,6 +899,13 @@ async function playTrack(track, queueIndex = -1) {
     // Load and play video
     ytPlayer.loadVideoById(videoId);
 
+    // Explicitly play after a short delay to ensure it starts (especially on mobile)
+    setTimeout(() => {
+        if (ytPlayer && ytPlayer.playVideo) {
+            ytPlayer.playVideo();
+        }
+    }, 100);
+
     // Update now playing info
     updateNowPlayingInfo(track);
 
@@ -1295,6 +1302,15 @@ function toggleExpandedView() {
             const colors = getExpandedGradientColors(track);
             expandedView.style.background = `linear-gradient(180deg, ${colors.top} 0%, ${colors.bottom} 100%)`;
         }
+
+        // Ensure player continues playing when expanded
+        if (ytPlayer && ytPlayer.getPlayerState) {
+            const state = ytPlayer.getPlayerState();
+            if (state === YT.PlayerState.PLAYING) {
+                // Player is playing, ensure it continues
+                setTimeout(() => ytPlayer.playVideo(), 100);
+            }
+        }
     } else {
         // Hide expanded view
         expandedView.classList.add('hidden');
@@ -1302,6 +1318,15 @@ function toggleExpandedView() {
         // Move video back to compact bar (before album art)
         nowPlayingLeft.insertBefore(nowPlayingVideoOriginal, nowPlayingLeft.firstChild.nextSibling);
         nowPlayingVideoOriginal.classList.remove('expanded-position');
+
+        // Ensure player continues playing when collapsed
+        if (ytPlayer && ytPlayer.getPlayerState) {
+            const state = ytPlayer.getPlayerState();
+            if (state === YT.PlayerState.PLAYING) {
+                // Player is playing, ensure it continues
+                setTimeout(() => ytPlayer.playVideo(), 100);
+            }
+        }
     }
 }
 
@@ -1338,6 +1363,11 @@ function updateExpandedViewContent() {
 
 // Click on now playing bar to expand (except play button)
 nowPlayingBar.addEventListener('click', (e) => {
+    // Don't expand on desktop (only on mobile)
+    if (window.innerWidth > 600) {
+        return;
+    }
+
     // Don't expand if clicking on a button or control
     if (e.target.closest('button') || e.target.closest('.player-controls') || e.target.closest('.volume-control')) {
         return;
