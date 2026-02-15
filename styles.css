@@ -988,8 +988,7 @@ body {
     color: var(--accent);
 }
 
-#shuffleBtn.active,
-#repeatBtn.active {
+#shuffleBtn.active {
     color: var(--accent);
 }
 
@@ -1028,8 +1027,7 @@ body {
         height: 28px;
     }
 
-    #shuffleBtn,
-    #repeatBtn {
+    #shuffleBtn {
         display: none;
     }
 }

@@ -842,26 +842,6 @@ function shuffleQueue() {
     currentQueueIndex = 0;
 }
 
-function toggleRepeat() {
-    const modes = ['off', 'all', 'one'];
-    const currentIndex = modes.indexOf(repeatMode);
-    repeatMode = modes[(currentIndex + 1) % modes.length];
-
-    const btn = document.getElementById('repeatBtn');
-    const svg = btn.querySelector('svg');
-
-    if (repeatMode === 'off') {
-        btn.style.color = '';
-        svg.innerHTML = '<path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5.585a1.75 1.75 0 0 1-.466 1.19l-.042.046a1.75 1.75 0 0 1-1.262.529H1.75A1.75 1.75 0 0 1 0 10.35V4.75zm3.75-2.25A2.25 2.25 0 0 0 1.5 4.75V9h13V4.75a2.25 2.25 0 0 0-2.25-2.25h-8.5zm9.684 8H2.566l4.6 3.07a1.75 1.75 0 0 0 1.668 0l4.6-3.07z"/>';
-    } else if (repeatMode === 'all') {
-        btn.style.color = 'var(--accent)';
-        svg.innerHTML = '<path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5.585a1.75 1.75 0 0 1-.466 1.19l-.042.046a1.75 1.75 0 0 1-1.262.529H1.75A1.75 1.75 0 0 1 0 10.35V4.75zm3.75-2.25A2.25 2.25 0 0 0 1.5 4.75V9h13V4.75a2.25 2.25 0 0 0-2.25-2.25h-8.5zm9.684 8H2.566l4.6 3.07a1.75 1.75 0 0 0 1.668 0l4.6-3.07z"/>';
-    } else { // 'one'
-        btn.style.color = 'var(--accent)';
-        svg.innerHTML = '<path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5.585a1.75 1.75 0 0 1-.466 1.19l-.042.046a1.75 1.75 0 0 1-1.262.529H1.75A1.75 1.75 0 0 1 0 10.35V4.75zm3.75-2.25A2.25 2.25 0 0 0 1.5 4.75V9h13V4.75a2.25 2.25 0 0 0-2.25-2.25h-8.5zm9.684 8H2.566l4.6 3.07a1.75 1.75 0 0 0 1.668 0l4.6-3.07z"/><text x="8" y="11" font-family="Inter, sans-serif" font-size="8" text-anchor="middle" fill="currentColor" font-weight="700">1</text>';
-    }
-}
-
 function handleTrackEnd() {
     playNext();
 }
@@ -923,11 +903,14 @@ function updateVolumeDisplay() {
 
     const icon = document.getElementById('volumeIcon');
     if (currentVolume === 0) {
-        icon.innerHTML = '<path d="M13.86 5.47a.75.75 0 0 0-1.061 0l-1.47 1.47-1.47-1.47A.75.75 0 0 0 8.8 6.53L10.269 8l-1.47 1.47a.75.75 0 1 0 1.06 1.06l1.47-1.47 1.47 1.47a.75.75 0 0 0 1.06-1.06L12.39 8l1.47-1.47a.75.75 0 0 0 0-1.06z"/><path d="M10.116 1.5A.75.75 0 0 0 8.991.85l-6.925 4a3.642 3.642 0 0 0-1.33 4.967 3.639 3.639 0 0 0 1.33 1.332l6.925 4a.75.75 0 0 0 1.125-.649v-1.906a4.73 4.73 0 0 1-1.5-.694v1.3L2.817 9.852a2.141 2.141 0 0 1-.781-2.92c.187-.324.456-.594.78-.782l5.8-3.35v1.3c.45-.313.956-.55 1.5-.694V1.5z"/>';
+        // Muted icon
+        icon.innerHTML = '<path d="M13.86 5.47a.75.75 0 0 0-1.061 0l-1.47 1.47-1.47-1.47A.75.75 0 0 0 8.8 6.53L10.269 8l-1.47 1.47a.75.75 0 1 0 1.06 1.06l1.47-1.47 1.47 1.47a.75.75 0 0 0 1.06-1.06L12.39 8l1.47-1.47a.75.75 0 0 0 0-1.06z"/><path d="M8 2.75v10.5a.75.75 0 0 1-1.238.57L3.472 11H1.75A.75.75 0 0 1 1 10.25v-4.5A.75.75 0 0 1 1.75 5h1.722l3.29-2.82A.75.75 0 0 1 8 2.75zM6.5 4.508L4.35 6.26a.75.75 0 0 1-.488.183h-1.36v3.113h1.36a.75.75 0 0 1 .488.183l2.15 1.752V4.508z"/>';
     } else if (currentVolume < 50) {
-        icon.innerHTML = '<path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.433 3.14V2.81L2.817 5.95z"/>';
+        // Low volume icon
+        icon.innerHTML = '<path d="M8 2.75v10.5a.75.75 0 0 1-1.238.57L3.472 11H1.75A.75.75 0 0 1 1 10.25v-4.5A.75.75 0 0 1 1.75 5h1.722l3.29-2.82A.75.75 0 0 1 8 2.75zM6.5 4.508L4.35 6.26a.75.75 0 0 1-.488.183h-1.36v3.113h1.36a.75.75 0 0 1 .488.183l2.15 1.752V4.508zM11.5 8a3.5 3.5 0 0 0-1.5-2.873v5.746A3.5 3.5 0 0 0 11.5 8z"/>';
     } else {
-        icon.innerHTML = '<path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.433 3.14V2.81L2.817 5.95zm10.907.098a5.828 5.828 0 0 1 0 3.304.75.75 0 1 0 1.44.416A7.328 7.328 0 0 0 15.164 8a7.328 7.328 0 0 0-1-1.868.75.75 0 1 0-1.44.416z"/>';
+        // High volume icon
+        icon.innerHTML = '<path d="M8 2.75v10.5a.75.75 0 0 1-1.238.57L3.472 11H1.75A.75.75 0 0 1 1 10.25v-4.5A.75.75 0 0 1 1.75 5h1.722l3.29-2.82A.75.75 0 0 1 8 2.75zM6.5 4.508L4.35 6.26a.75.75 0 0 1-.488.183h-1.36v3.113h1.36a.75.75 0 0 1 .488.183l2.15 1.752V4.508zM11.5 8a3.5 3.5 0 0 0-1.5-2.873v5.746A3.5 3.5 0 0 0 11.5 8zM13.5 8a5.5 5.5 0 0 0-2.381-4.534.75.75 0 1 0-.738 1.306A4 4 0 0 1 12 8a4 4 0 0 1-1.619 3.228.75.75 0 0 0 .738 1.306A5.5 5.5 0 0 0 13.5 8z"/>';
     }
 }
 
@@ -936,7 +919,6 @@ document.getElementById('playPauseBtn').addEventListener('click', togglePlayPaus
 document.getElementById('nextBtn').addEventListener('click', playNext);
 document.getElementById('prevBtn').addEventListener('click', playPrevious);
 document.getElementById('shuffleBtn').addEventListener('click', toggleShuffle);
-document.getElementById('repeatBtn').addEventListener('click', toggleRepeat);
 document.getElementById('volumeBtn').addEventListener('click', toggleMute);
 
 // Progress bar click
