@@ -151,29 +151,6 @@ async function fetchAlbumArt(trackId, imgElement) {
     if (!trackId || !imgElement) return;
 
     try {
-        // Try blob storage first
-        const blobUrl = getImageUrl(`album-art/${trackId}.jpg`);
-        if (blobUrl.includes('blob.vercel-storage.com')) {
-            imgElement.src = blobUrl;
-            imgElement.onload = () => {
-                imgElement.style.display = 'block';
-            };
-            imgElement.onerror = async () => {
-                // Fallback to Spotify oEmbed
-                await fetchFromSpotifyOEmbed(trackId, imgElement);
-            };
-        } else {
-            // No blob storage, use Spotify oEmbed
-            await fetchFromSpotifyOEmbed(trackId, imgElement);
-        }
-    } catch (error) {
-        console.error('Error fetching album art:', error);
-        imgElement.style.display = 'none';
-    }
-}
-
-async function fetchFromSpotifyOEmbed(trackId, imgElement) {
-    try {
         const response = await fetch(`https://open.spotify.com/oembed?url=spotify:track:${trackId}`);
         if (!response.ok) throw new Error('oEmbed fetch failed');
 
@@ -185,6 +162,7 @@ async function fetchFromSpotifyOEmbed(trackId, imgElement) {
             imgElement.style.display = 'none';
         }
     } catch (error) {
+        console.error('Error fetching album art:', error);
         imgElement.style.display = 'none';
     }
 }
