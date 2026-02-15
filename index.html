@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jackify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <svg viewBox="0 0 78 24" width="78" height="24" fill="#fff">
+                <text x="0" y="20" font-family="Inter, sans-serif" font-weight="900" font-size="20" fill="#fff">Jackify</text>
+            </svg>
+        </div>
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav-item active">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12.5 3.247a1 1 0 0 0-1 0L4 7.577V20h4.5v-6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v6H20V7.577l-7.5-4.33zm-2-1.732a3 3 0 0 1 3 0l7.5 4.33a2 2 0 0 1 1 1.732V21a1 1 0 0 1-1 1h-6.5a1 1 0 0 1-1-1v-6h-3v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.577a2 2 0 0 1 1-1.732l7.5-4.33z"/></svg>
+                <span>Home</span>
+            </li>
+            <li class="sidebar-nav-item">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 1 0 1.414-1.414l-4.344-4.344a9.157 9.157 0 0 0 2.077-5.816c0-5.14-4.226-9.28-9.407-9.28zm-7.407 9.28c0-4.006 3.302-7.28 7.407-7.28s7.407 3.274 7.407 7.28-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.28z"/></svg>
+                <span>Search</span>
+            </li>
+        </ul>
+        <div class="sidebar-library">
+            <div class="library-header">
+                <div class="library-header-left">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3 22a1 1 0 0 1-1-1V3a1 1 0 0 1 2 0v18a1 1 0 0 1-1 1zM15.5 2.134A1 1 0 0 0 14 3v18a1 1 0 0 0 1.5.866l11-9a1 1 0 0 0 0-1.732l-11-9zM16 19.732V4.268L24.268 12 16 19.732z"/></svg>
+                    <span>Your Library</span>
+                </div>
+            </div>
+            <div class="library-filters">
+                <button class="filter-chip active">Playlists</button>
+            </div>
+            <div class="library-list" id="sidebarList"></div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-nav">
+                <button class="topbar-btn" id="backBtn" disabled>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M11.03.47a.75.75 0 0 1 0 1.06L4.56 8l6.47 6.47a.75.75 0 1 1-1.06 1.06L2.44 8 9.97.47a.75.75 0 0 1 1.06 0z"/></svg>
+                </button>
+                <button class="topbar-btn" id="fwdBtn" disabled>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4.97.47a.75.75 0 0 0 0 1.06L11.44 8l-6.47 6.47a.75.75 0 1 0 1.06 1.06L13.56 8 6.03.47a.75.75 0 0 0-1.06 0z"/></svg>
+                </button>
+            </div>
+            <div class="topbar-profile">
+                <div class="profile-avatar">J</div>
+            </div>
+        </header>
+
+        <!-- Home View -->
+        <div class="view" id="homeView">
+            <section class="greeting-section">
+                <h1 id="greeting"></h1>
+            </section>
+            <section class="section">
+                <div class="section-header">
+                    <h2>Jack's Playlists</h2>
+                </div>
+                <div class="playlist-grid" id="playlistGrid"></div>
+            </section>
+        </div>
+
+        <!-- Playlist Detail View -->
+        <div class="view hidden" id="playlistView">
+            <div class="playlist-header" id="playlistHeader"></div>
+            <div class="playlist-tracks" id="playlistTracks"></div>
+        </div>
+
+        <!-- Now Playing Bar -->
+        <div class="now-playing-bar">
+            <div class="now-playing-left">
+                <div class="now-playing-video" id="nowPlayingVideo">
+                    <div id="ytPlayer"></div>
+                </div>
+                <div class="now-playing-info" id="nowPlayingInfo">
+                    <span class="now-playing-empty"></span>
+                </div>
+            </div>
+            <div class="now-playing-center">
+                <div class="player-controls">
+                    <button class="control-btn" id="shuffleBtn" title="Shuffle"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M13.151.922a.75.75 0 1 0-1.06 1.06L13.109 3H11.16a3.75 3.75 0 0 0-2.873 1.34l-6.173 7.356A2.25 2.25 0 0 1 .39 12.5H0V14h.391a3.75 3.75 0 0 0 2.873-1.34l6.173-7.356a2.25 2.25 0 0 1 1.724-.804h1.947l-1.017 1.018a.75.75 0 0 0 1.06 1.06l2.306-2.306a.75.75 0 0 0 0-1.06L13.15.92zM.391 3.5H0V2h.391c1.109 0 2.16.49 2.873 1.34L4.89 5.277l-.979 1.167-1.796-2.14A2.25 2.25 0 0 0 .39 3.5z"/><path d="m7.5 10.723.98-1.167 1.796 2.14a2.25 2.25 0 0 0 1.724.804h1.947l-1.017-1.018a.75.75 0 1 1 1.06-1.06l2.306 2.306a.75.75 0 0 1 0 1.06l-2.306 2.306a.75.75 0 1 1-1.06-1.06L13.109 14H11.16a3.75 3.75 0 0 1-2.873-1.34L7.5 10.723z"/></svg></button>
+                    <button class="control-btn" id="prevBtn" title="Previous"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.3 1a.7.7 0 0 1 .7.7v5.15l9.95-5.744a.7.7 0 0 1 1.05.606v12.575a.7.7 0 0 1-1.05.607L4 9.149V14.3a.7.7 0 0 1-.7.7H2.7a.7.7 0 0 1-.7-.7V1.7a.7.7 0 0 1 .7-.7h.6z"/></svg></button>
+                    <button class="control-btn play-btn" id="playPauseBtn" title="Play"><svg id="playPauseIcon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"/></svg></button>
+                    <button class="control-btn" id="nextBtn" title="Next"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.575a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-.6z"/></svg></button>
+                    <button class="control-btn" id="repeatBtn" title="Repeat"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5.585a1.75 1.75 0 0 1-.466 1.19l-.042.046a1.75 1.75 0 0 1-1.262.529H1.75A1.75 1.75 0 0 1 0 10.35V4.75zm3.75-2.25A2.25 2.25 0 0 0 1.5 4.75V9h13V4.75a2.25 2.25 0 0 0-2.25-2.25h-8.5zm9.684 8H2.566l4.6 3.07a1.75 1.75 0 0 0 1.668 0l4.6-3.07z"/></svg></button>
+                </div>
+                <div class="progress-bar">
+                    <span class="progress-time" id="progressCurrent">0:00</span>
+                    <div class="progress-track" id="progressTrack">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-time" id="progressTotal">0:00</span>
+                </div>
+            </div>
+            <div class="now-playing-right">
+                <button class="control-btn" id="expandVideoBtn" title="Expand video" style="margin-right:8px;display:none;">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6.53 9.47a.75.75 0 0 1 0 1.06l-3.72 3.72H5.5a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75v-4a.75.75 0 0 1 1.5 0v2.69l3.72-3.72a.75.75 0 0 1 1.06 0zm2.94-2.94a.75.75 0 0 1 0-1.06l3.72-3.72H10.5a.75.75 0 1 1 0-1.5h4a.75.75 0 0 1 .75.75v4a.75.75 0 0 1-1.5 0V3.31l-3.72 3.72a.75.75 0 0 1-1.06 0z"/></svg>
+                </button>
+                <div class="volume-control">
+                    <button class="control-btn" id="volumeBtn" style="width:auto;height:auto;">
+                        <svg id="volumeIcon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.433 3.14V2.81L2.817 5.95zm10.907.098a5.828 5.828 0 0 1 0 3.304.75.75 0 1 0 1.44.416A7.328 7.328 0 0 0 15.164 8a7.328 7.328 0 0 0-1-1.868.75.75 0 1 0-1.44.416z"/></svg>
+                    </button>
+                    <div class="volume-track" id="volumeTrack">
+                        <div class="volume-fill" id="volumeFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expanded Video Overlay -->
+        <div class="video-overlay hidden" id="videoOverlay">
+            <div class="video-overlay-content">
+                <button class="video-overlay-close" id="closeVideoOverlay">&times;</button>
+                <div id="ytPlayerExpanded"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,989 @@
+// Playlist data
+const playlists = [
+    { name: "Liked Songs", url: "https://open.spotify.com/collection/tracks", img: null, songs: 241, date: "2021-10-26", subtitle: null, isLiked: true },
+    { name: "Repeat Rewind", url: "https://open.spotify.com/playlist/2H4u1iNige1NX86pEWBcPv", img: "pfps/Repeat Rewind.jpg", songs: 30, date: "2025-12-01", subtitle: null, description: "This playlist was collected posthumously." },
+    { name: "On Repeat", url: "https://open.spotify.com/playlist/49YeV4mj1uXMMi8FIu97V7", img: "pfps/On Repeat.jpeg", songs: 30, date: "2025-12-01", subtitle: null, description: "This playlist was collected posthumously." },
+    { name: "Your Top Songs 2022", url: "https://open.spotify.com/playlist/0yhPPOU0ZTLELil0deZEiH", img: "pfps/Your Top Songs 2022.jpeg", songs: 101, date: "2022-12-01", subtitle: null },
+    { name: "Your Top Songs 2023", url: "https://open.spotify.com/playlist/7qt2dWTQGyxGgamEvn8H0R", img: "pfps/Your Top Songs 2023.jpg", songs: 100, date: "2023-12-01", subtitle: null },
+    { name: "Your Top Songs 2024", url: "https://open.spotify.com/playlist/51WeFWEG5W7RuoB9q4v83q", img: "pfps/Your Top Songs 2024.jpeg", songs: 100, date: "2024-12-01", subtitle: null },
+    { name: "Your Top Songs 2025", url: "https://open.spotify.com/playlist/2kG3P3jLUlualM0r8oZ1Ch", img: "pfps/Your Top Songs 2025.jpeg", songs: 100, date: "2025-12-01", subtitle: null },
+    { name: "it just means more", url: "https://open.spotify.com/playlist/5sPfoo3F9LwNsq1pRNFjGR", img: "pfps/it just means more.jpeg", songs: 6, date: "2024-05-16", subtitle: null },
+    { name: "night into day", url: "https://open.spotify.com/playlist/59VUVVewEo6b5jxUdvW9FJ", img: "pfps/night into day.jpeg", songs: 23, date: "2023-06-15", subtitle: null },
+    { name: "Spring '22", url: "https://open.spotify.com/playlist/4mgL620ffxj4VYuviRl4F8", img: "pfps/Spring '22.jpeg", songs: 81, date: "2022-04-01", subtitle: null },
+    { name: "ex-wife for a reason", url: "https://open.spotify.com/playlist/7JHNXZ4z663rArEs0YoRwK", img: "pfps/ex-wife for a reason.jpeg", songs: 44, date: "2024-09-25", subtitle: null },
+    { name: "freely flowing", url: "https://open.spotify.com/playlist/73wWvTQ01Hn9qnqmg69J0S", img: "pfps/freely flowing.jpeg", songs: 35, date: "2023-02-22", subtitle: null },
+    { name: "male manipulated", url: "https://open.spotify.com/playlist/1WWr5ZT2D2NKmkDZUch7Qc", img: "pfps/male manipulated.jpeg", songs: 52, date: "2023-01-11", subtitle: "The last two letters are irrelevant" },
+    { name: "ript", url: "https://open.spotify.com/playlist/2bzYU0ZU0zjp0PYFVYmHN7", img: "pfps/ript.jpeg", songs: 21, date: "2023-08-22", subtitle: null },
+    { name: "funky", url: "https://open.spotify.com/playlist/4oRbkExlGSx4fi0S98xNj8", img: "pfps/funky.jpeg", songs: 10, date: "2023-09-08", subtitle: null },
+    { name: "I'm a crepe I'm a weirdough", url: "https://open.spotify.com/playlist/5TARRDc4Nt74GEYB6hkPW7", img: "pfps/I'm a crepe I'm a weirdough.jpeg", songs: 39, date: "2023-12-18", subtitle: null },
+    { name: "SAE", url: "https://open.spotify.com/playlist/3aq7FULzFT8znmlWODqv2L", img: "pfps/SAE.jpeg", songs: 1, date: "2025-05-26", subtitle: null },
+    { name: "junior", url: "https://open.spotify.com/playlist/4W3cOeADPWyi1mltiT1FAL", img: "pfps/junior.jpeg", songs: 34, date: "2022-09-14", subtitle: "Bruh what even was September\u{1F602}\u{1F602}" },
+    { name: "Rowing Trip '21", url: "https://open.spotify.com/playlist/6GN9yE7qAD3B0vgOnYCUqM", img: "pfps/Rowing Trip '21.jpeg", songs: 54, date: "2022-01-08", subtitle: "getting gunned down in the streets of miami" },
+    { name: "\u201Ccrackle barrel \u201D", url: "https://open.spotify.com/playlist/6LTDwWwkvAeuCTunkqqLUX", img: "pfps/\"crackle barrel \".jpeg", songs: 26, date: "2023-10-11", subtitle: null },
+    { name: "Old summer", url: "https://open.spotify.com/playlist/62w94hFNNqm2lw74LO70Pg", img: "pfps/Old summer.jpeg", songs: 26, date: "2023-03-19", subtitle: null },
+    { name: "driving off", url: "https://open.spotify.com/playlist/0ICnWhUNvPhHY9zBWhgFAG", img: "pfps/ driving off.jpeg", songs: 37, date: "2023-04-28", subtitle: null },
+    { name: "nowhere bound", url: "https://open.spotify.com/playlist/3OIKVnP7WCWytKDYgNAqq6", img: "pfps/nowhere bound.jpeg", songs: 27, date: "2024-05-13", subtitle: null },
+    { name: "My Ever-Evolving Music Taste", url: "https://open.spotify.com/playlist/5Iv7DHWkqADHFenHas0Fyp", img: "pfps/My Ever-Evolving Music Taste.jpeg", songs: 66, date: "2021-11-18", subtitle: "take me back to the simplicity" },
+    { name: "is this tequila?", url: "https://open.spotify.com/playlist/0SZT2EDZ36dD2ygwvkbWFI", img: "pfps/is this tequila?.jpeg", songs: 52, date: "2025-04-20", subtitle: null },
+    { name: "Mom's Jams", url: "https://open.spotify.com/playlist/07Lex2t3ZGT4kCuYDjlbmS", img: "pfps/Mom's Jams.jpeg", songs: 46, date: "2021-12-20", subtitle: null },
+    { name: "hype", url: "https://open.spotify.com/playlist/4kLNT2Hu2ZCaPuq6VEWkEl", img: "pfps/hype.jpeg", songs: 46, date: "2021-12-16", subtitle: null },
+    { name: "staring out the window", url: "https://open.spotify.com/playlist/689hZij4qDHSyEwWRzvv1I", img: "pfps/staring out the window.jpeg", songs: 17, date: "2022-09-19", subtitle: "Bro was in his feels" },
+    { name: "\u{1F920}\u{1F3B8}", url: "https://open.spotify.com/playlist/7JcObha08QuYEnZnjn7ty1", img: "pfps/\u{1F920}\u{1F3B8}.jpeg", songs: 57, date: "2021-10-11", subtitle: null },
+    { name: "Fall '21", url: "https://open.spotify.com/playlist/0YTm5U5LJwPNYCr1TNfDeL", img: "pfps/Fall '21.jpeg", songs: 79, date: "2021-11-18", subtitle: null },
+    { name: "high and lonesome, hard and strong", url: "https://open.spotify.com/playlist/3bbr0o359oR1x39VMFQurh", img: "pfps/high and lonesome, hard and strong.jpeg", songs: 22, date: "2025-03-28", subtitle: null },
+    { name: "uno van", url: "https://open.spotify.com/playlist/6niLcRxDFr9kOvDqQ1bGXf", img: "pfps/uno van.jpeg", songs: 37, date: "2022-09-05", subtitle: "Shoutout to our poor drivers" },
+    { name: "soft jams", url: "https://open.spotify.com/playlist/6xIyn93QMArBfeKxeemejX", img: "pfps/soft jams.jpeg", songs: 42, date: "2022-01-03", subtitle: null },
+    { name: "hood cookout", url: "https://open.spotify.com/playlist/0OYFUr6GjFKwaAUKyzBDdK", img: "pfps/hood cookout.jpeg", songs: 40, date: "2024-08-19", subtitle: null },
+    { name: "Summer '21", url: "https://open.spotify.com/playlist/6rFfOLVdRJgV6TppK24Ug3", img: "pfps/Summer '21.jpeg", songs: 127, date: "2021-08-10", subtitle: null },
+    { name: "\u{1F3C4} \u{1F3B8}", url: "https://open.spotify.com/playlist/2HgbFyjw9dNiZcdCAtIR2I", img: "pfps/\u{1F3C4} \u{1F3B8}.jpeg", songs: 67, date: "2023-01-03", subtitle: null },
+    { name: "smoke bubbles", url: "https://open.spotify.com/playlist/4DSzS7eSU9gOWJtbngVtvd", img: "pfps/smoke bubbles.jpeg", songs: 10, date: "2023-08-21", subtitle: null },
+    { name: "cartoon guitar", url: "https://open.spotify.com/playlist/29zQ4JHpJFHWSd74wmz0XN", img: "pfps/cartoon guitar.jpeg", songs: 6, date: "2023-08-01", subtitle: null },
+    { name: "rockin the boat", url: "https://open.spotify.com/playlist/6xp9MpgyuaIO762FvmOcov", img: "pfps/rockin the boat.jpeg", songs: 33, date: "2023-03-13", subtitle: null },
+    { name: "hell bound", url: "https://open.spotify.com/playlist/1mdVBOhTppSl15ctzMEusN", img: "pfps/hell bound.jpeg", songs: 42, date: "2024-08-19", subtitle: null },
+    { name: "bring it on back", url: "https://open.spotify.com/playlist/44YUJNUPOK10mDCnlYIQKq", img: "pfps/bring it on back.jpeg", songs: 41, date: "2025-09-03", subtitle: null },
+    { name: "keep away", url: "https://open.spotify.com/playlist/4kw13qPLbp0F7uT0YsCB92", img: "pfps/keep away.jpeg", songs: 57, date: "2024-06-25", subtitle: null },
+    { name: "vodka and ginger ale", url: "https://open.spotify.com/playlist/0kyl89XxvtIsh2gpdlLqCa", img: "pfps/vodka and ginger ale.jpeg", songs: 30, date: "2024-09-13", subtitle: null },
+    { name: "playlist of despair and yearning", url: "https://open.spotify.com/playlist/0KZdlD3t5lCrGWsoOTMn0c", img: "pfps/playlist of despair and yearning.jpeg", songs: 24, date: "2025-09-09", subtitle: null },
+    { name: "roadtrip!", url: "https://open.spotify.com/playlist/5ca055G3SdGoXVkM3R3iN0", img: "pfps/ roadtrip!.jpeg", songs: 100, date: "2022-10-07", subtitle: null },
+    { name: "read the first letters", url: "https://open.spotify.com/playlist/5cPnbZA1947C9WtqJ43XxM", img: "pfps/read the first letters.jpeg", songs: 15, date: "2022-10-07", subtitle: "just read the title" },
+    { name: "idk what they're saying but it's funky fresh (my version)", url: "https://open.spotify.com/playlist/5gP8WtD412ABZFAP01BX87", img: "pfps/idk what they're saying but it's funky fresh (my version).jpeg", songs: 38, date: "2022-08-17", subtitle: "My version is better fuck you jackson" },
+    { name: "moonlight on the water", url: "https://open.spotify.com/playlist/6ruqRsH8EqqUD0xoFPBCnG", img: "pfps/moonlight on the water.jpeg", songs: 25, date: "2022-08-06", subtitle: null },
+    { name: "70\u00B0 finally", url: "https://open.spotify.com/playlist/01NxghfAYnfQQei3zH6530", img: "pfps/70\u00B0 finally.jpeg", songs: 45, date: "2025-02-28", subtitle: null },
+    { name: "villain arc", url: "https://open.spotify.com/playlist/2AbB1FUt3cxcTChmNYr7hu", img: "pfps/villain arc.jpeg", songs: 9, date: "2022-10-23", subtitle: "Didn't really follow thru on this idea" },
+    { name: "cloud lakes", url: "https://open.spotify.com/playlist/215b1549zo2VRIQ5CAB31k", img: "pfps/cloud lakes.jpeg", songs: 36, date: "2023-10-14", subtitle: null },
+    { name: "strokin' it", url: "https://open.spotify.com/playlist/5w1OBCYPgKqmo4iUwGjLlR", img: "pfps/strokin' it.jpeg", songs: 60, date: "2023-07-27", subtitle: null },
+    { name: "Winter '22", url: "https://open.spotify.com/playlist/2nkcWSphgIVIEd2wyA4yoR", img: "pfps/Winter '22.jpeg", songs: 69, date: "2022-02-16", subtitle: null },
+    { name: "way back when", url: "https://open.spotify.com/playlist/0qL9S45URxS8SO8AMS6Kei", img: "pfps/way back when.jpeg", songs: 35, date: "2023-03-06", subtitle: null },
+    { name: "im feelin' romantical", url: "https://open.spotify.com/playlist/5KyX3BvteqwZdFDg752EZ4", img: "pfps/im feelin' romantical.jpeg", songs: 25, date: "2022-08-30", subtitle: null },
+    { name: "take me back", url: "https://open.spotify.com/playlist/22ZZvdO5INxEbVpEqGXWpS", img: "pfps/take me back.jpeg", songs: 9, date: "2025-06-23", subtitle: null },
+    { name: "MAKE ME AN OFFER", url: "https://open.spotify.com/playlist/5IroSDXzQ982pHQRR3jaAT", img: "pfps/MAKE ME AN OFFER.jpeg", songs: 47, date: "2023-10-12", subtitle: null },
+    { name: "Triton", url: "https://open.spotify.com/playlist/0ukxgKhTEgPmVVD0pUDdjn", img: "pfps/Triton.jpeg", songs: 19, date: "2023-01-11", subtitle: null },
+    { name: "something about us", url: "https://open.spotify.com/playlist/6lbD5kUMBKknwQwVhcmJzN", img: "pfps/ something about us.jpeg", songs: 19, date: "2023-07-30", subtitle: null },
+    { name: "Top Tracks 11/29/2021 (last 6 months)", url: "https://open.spotify.com/playlist/1OutsIXGodH2mBO24I2OiW", img: "pfps/Top Tracks 11:29:2021 (last 6 months).jpeg", songs: 50, date: "2021-11-29", subtitle: "Your favorite tracks last 6 months as of 11/29/2021. Created by statsforspotify.com" },
+    { name: "whiskey bent", url: "https://open.spotify.com/playlist/353Y8McXMV4r6gB4bV6Wtc", img: "pfps/whiskey bent.jpeg", songs: 34, date: "2024-08-20", subtitle: null },
+    { name: "right back at you", url: "https://open.spotify.com/playlist/1zV4ZyK8eMWmNCcGuNh4oo", img: "pfps/ right back at you.jpeg", songs: 38, date: "2025-07-18", subtitle: null },
+    { name: "Late Summer '22", url: "https://open.spotify.com/playlist/0TOOW74TqYTBRAinIiG7nv", img: "pfps/ Late Summer '22.jpeg", songs: 37, date: "2022-08-06", subtitle: null },
+    { name: "textbook panderin'", url: "https://open.spotify.com/playlist/0MQpy1oC3c7vPh4BC0TT88", img: "pfps/ textbook panderin'.jpeg", songs: 31, date: "2024-05-03", subtitle: null },
+    { name: "jam ideas", url: "https://open.spotify.com/playlist/6nUlFYZXvAPdDG26sdV4HJ", img: "pfps/ jam ideas.jpeg", songs: 16, date: "2024-10-16", subtitle: null },
+    { name: "My playlist #82", url: "https://open.spotify.com/playlist/5qU7JubxOSX4atFGmKSiY3", img: "pfps/My playlist #82.jpeg", songs: 1, date: "2024-08-23", subtitle: null },
+    { name: "CAKE", url: "https://open.spotify.com/playlist/29vF8G11tLC7q8pbueadI5", img: "pfps/CAKE.jpeg", songs: 60, date: "2025-08-27", subtitle: null },
+    { name: "finally", url: "https://open.spotify.com/playlist/15nG7kUtj6rMQwOfwUIsFX", img: "pfps/finally.jpeg", songs: 33, date: "2022-12-12", subtitle: "Lasted about a week. Foo fighters good tho" },
+    { name: "barn dancing isn't real", url: "https://open.spotify.com/playlist/6TokdHaAxWAu0PLE1pmfj0", img: "pfps/barn dancing isn't real.jpeg", songs: 62, date: "2023-07-18", subtitle: "there's no knots in bowling" },
+    { name: "Stagger", url: "https://open.spotify.com/playlist/6BpvtlcnUYqHdp8lrVzkHr", img: "pfps/Stagger.jpeg", songs: 42, date: "2022-04-15", subtitle: null },
+    { name: "Old Timey Jazz", url: "https://open.spotify.com/playlist/0QNWiSfwkeum4eGf3ijTVw", img: "pfps/Old Timey Jazz.jpeg", songs: 38, date: "2021-10-25", subtitle: null },
+    { name: "was pop is rock", url: "https://open.spotify.com/playlist/3uPZX0ScFjO31y0APeJ6Aw", img: "pfps/was pop is rock.jpeg", songs: 25, date: "2023-11-10", subtitle: null },
+    { name: "Avett addiction", url: "https://open.spotify.com/playlist/0Dw24Hw8sjJBFfigwGzwsp", img: "pfps/Avett addiction.jpeg", songs: 75, date: "2023-08-06", subtitle: null },
+    { name: "reminds me of friends", url: "https://open.spotify.com/playlist/4gzoXDjsyGdFCpbfg8S66h", img: "pfps/ reminds me of friends.jpeg", songs: 78, date: "2022-01-21", subtitle: null },
+    { name: "i - 85", url: "https://open.spotify.com/playlist/5rLDqdJmBBgy3OcP6Fipan", img: "pfps/i - 85.jpeg", songs: 45, date: "2023-09-16", subtitle: null },
+    { name: "the pressure", url: "https://open.spotify.com/playlist/61TnNVt1xo7khTB7jcJxuX", img: "pfps/the pressure.jpeg", songs: 39, date: "2024-04-08", subtitle: null },
+    { name: "fradboy", url: "https://open.spotify.com/playlist/1payFd3nIhrCmtHOjDDTtD", img: "pfps/fradboy.jpeg", songs: 24, date: "2022-10-05", subtitle: null },
+    { name: "leaving is the hardest part", url: "https://open.spotify.com/playlist/3uY8rf8UgAXG3JdnhZn4sG", img: "pfps/leaving is the hardest part.jpeg", songs: 13, date: "2023-04-13", subtitle: null },
+    { name: "tunes to learn", url: "https://open.spotify.com/playlist/4i98YH79oNbtQw0bXrryxA", img: "pfps/tunes to learn.jpeg", songs: 18, date: "2022-12-04", subtitle: "So much for that" },
+    { name: "all night revival", url: "https://open.spotify.com/playlist/00y8R2ONTnA4wffUowxPuZ", img: "pfps/all night revival.jpeg", songs: 46, date: "2023-09-02", subtitle: null },
+    { name: "Aaroncore", url: "https://open.spotify.com/playlist/0WOYwf8th5AFSwUpJ31ru4", img: "pfps/Aaroncore.jpeg", songs: 38, date: "2022-06-12", subtitle: null },
+    { name: "medicine to me", url: "https://open.spotify.com/playlist/0PFIjCT7TA0wd2CHFLJeOk", img: "pfps/medicine to me.jpeg", songs: 19, date: "2024-11-14", subtitle: null },
+    { name: "white lines", url: "https://open.spotify.com/playlist/2UxOhFbTR6taftNnUJ9wIL", img: "pfps/white lines.jpeg", songs: 60, date: "2024-02-09", subtitle: null },
+    { name: "hopeless romantic (crash out)", url: "https://open.spotify.com/playlist/1asKzsWsB6ACH83rGDBnyo", img: "pfps/hopeless romantic (crash out).jpeg", songs: 36, date: "2024-10-24", subtitle: null },
+    { name: "EZ\u{1F3AF}", url: "https://open.spotify.com/playlist/5iqNTuQ7iJGwvfH3XVoPAe", img: "pfps/EZ\u{1F3AF}.jpeg", songs: 25, date: "2025-03-13", subtitle: null },
+    { name: "brayden from boone", url: "https://open.spotify.com/playlist/6PtLr3cz7tHic5ZagfsMjn", img: "pfps/brayden from boone.jpeg", songs: 115, date: "2023-09-16", subtitle: null },
+    { name: "post-camp vibes", url: "https://open.spotify.com/playlist/3v9YOUlpASsfHRdWRXrFit", img: "pfps/post-camp vibes.jpeg", songs: 29, date: "2022-07-16", subtitle: null },
+    { name: "Boys Summer '22", url: "https://open.spotify.com/playlist/125C571N44fuTLYyTJw2wa", img: "pfps/Boys Summer '22.jpeg", songs: 102, date: "2022-08-20", subtitle: "Jungle juice ass playlist" },
+    { name: "For whom the bell tolls", url: "https://open.spotify.com/playlist/1fnasuuYu6b6Ehj8oNaoyT", img: "pfps/For whom the bell tolls.jpeg", songs: 8, date: "2024-01-06", subtitle: null },
+    { name: "from the soul", url: "https://open.spotify.com/playlist/2lZrgc6ry0PVbTexNuNBDa", img: null, songs: 0, date: null, subtitle: null },
+    { name: "My 2023 Playlist in a Bottle", url: "https://open.spotify.com/playlist/1TRo41tKA2v7DkEGcxfO1Y", img: "pfps/My 2023 Playlist in a Bottle.jpeg", songs: 5, date: "2024-01-06", subtitle: null },
+    { name: "urban?", url: "https://open.spotify.com/playlist/1kRmNZRVvo03GiXqrsKASf", img: "pfps/urban?.jpeg", songs: 32, date: "2023-01-04", subtitle: null },
+    { name: "on the run", url: "https://open.spotify.com/playlist/0Sy0jg9BHCPt8zapX7mddz", img: "pfps/on the run.jpeg", songs: 31, date: "2023-10-12", subtitle: null },
+    { name: "Costume Change", url: "https://open.spotify.com/playlist/6rKtERvWHgOpFLHXCJQec2", img: "pfps/Costume Change.jpeg", songs: 18, date: "2022-03-24", subtitle: null },
+    { name: "dead long winter", url: "https://open.spotify.com/playlist/6au7w2ZIEyJaj3EBQFI89d", img: "pfps/dead long winter.jpeg", songs: 36, date: "2024-11-09", subtitle: null },
+    { name: "Vulfpeck\u{1F629}", url: "https://open.spotify.com/playlist/2EMGowPfyLCY8uKBVTbVpC", img: "pfps/Vulfpeck\u{1F629}.jpeg", songs: 51, date: "2022-01-08", subtitle: null },
+    { name: "Top Songs ever as of may", url: "https://open.spotify.com/playlist/2KbRxO6RzCgPA0frrCtlUI", img: "pfps/Top Songs ever as of may.jpeg", songs: 50, date: "2022-05-02", subtitle: null },
+    { name: "Early Summer '22", url: "https://open.spotify.com/playlist/5GhelpVGZzWmdAko94qmt4", img: "pfps/Early Summer '22.jpeg", songs: 54, date: "2022-05-24", subtitle: null },
+    { name: "you should be dancing", url: "https://open.spotify.com/playlist/4o8cjrLgyMjqWGGFWz9N9p", img: "pfps/you should be dancing.jpeg", songs: 32, date: "2023-04-19", subtitle: null },
+];
+
+// State
+let currentView = 'home';
+let currentPlaylist = null;
+let searchTerm = '';
+
+// Format date
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+// Format duration
+function formatDuration(ms) {
+    const min = Math.floor(ms / 60000);
+    const sec = Math.floor((ms % 60000) / 1000);
+    return `${min}:${sec.toString().padStart(2, '0')}`;
+}
+
+// CSV filename mapping
+function getCSVFilename(playlistName) {
+    const overrides = {
+        "is this tequila?": "is_this_tequila.csv",
+        "urban?": "urban.csv",
+        "Top Tracks 11/29/2021 (last 6 months)": "Top_Tracks_11292021_(last_6_months).csv",
+        "Avett addiction": "Avett_addiction_.csv",
+        "EZ\u{1F3AF}": "EZ\u{1F3AF}_.csv",
+        "I'm a crepe I'm a weirdough": "I'm_a_crepe_I'm_a_weirdough_.csv",
+        "ript": "ript_.csv",
+        "\u{1F3C4} \u{1F3B8}": "\u{1F3C4}_\u{1F3B8}_.csv",
+        "\u201Ccrackle barrel \u201D": '"crackle_barrel_".csv',
+    };
+    if (overrides[playlistName] !== undefined) return overrides[playlistName];
+    return playlistName.replaceAll(" ", "_") + ".csv";
+}
+
+// CSV parser (handles quoted fields with commas)
+function parseCSVLine(line) {
+    const fields = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (inQuotes) {
+            if (ch === '"' && line[i + 1] === '"') {
+                current += '"';
+                i++;
+            } else if (ch === '"') {
+                inQuotes = false;
+            } else {
+                current += ch;
+            }
+        } else {
+            if (ch === '"') {
+                inQuotes = true;
+            } else if (ch === ',') {
+                fields.push(current);
+                current = '';
+            } else {
+                current += ch;
+            }
+        }
+    }
+    fields.push(current);
+    return fields;
+}
+
+function parseCSV(text) {
+    const lines = text.split('\n').filter(l => l.trim());
+    if (lines.length < 2) return [];
+    const headers = parseCSVLine(lines[0]);
+    const nameIdx = headers.indexOf('Track Name');
+    const albumIdx = headers.indexOf('Album Name');
+    const artistIdx = headers.indexOf('Artist Name(s)');
+    const durationIdx = headers.indexOf('Duration (ms)');
+    return lines.slice(1).map(line => {
+        const fields = parseCSVLine(line);
+        return {
+            name: fields[nameIdx] || '',
+            album: fields[albumIdx] || '',
+            artist: fields[artistIdx] || '',
+            duration: parseInt(fields[durationIdx]) || 0,
+        };
+    });
+}
+
+// Greeting
+function getGreeting() {
+    const h = new Date().getHours();
+    if (h < 12) return 'Good morning';
+    if (h < 18) return 'Good afternoon';
+    return 'Good evening';
+}
+
+// Initialize
+function init() {
+    document.getElementById('greeting').textContent = getGreeting();
+    renderPlaylistGrid();
+    renderSidebar();
+    setupSearch();
+}
+
+// Render playlist grid
+function renderPlaylistGrid() {
+    const grid = document.getElementById('playlistGrid');
+    grid.innerHTML = '';
+
+    const filtered = searchTerm
+        ? playlists.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        : playlists;
+
+    filtered.forEach((p, i) => {
+        const card = document.createElement('div');
+        card.className = 'playlist-card';
+        card.onclick = () => openPlaylist(p);
+
+        const imgHtml = p.isLiked
+            ? `<div class="card-img liked-songs-gradient" style="width:100%;aspect-ratio:1;border-radius:6px;display:flex;align-items:flex-end;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.5)">
+                <svg width="32" height="32" viewBox="0 0 16 16" fill="#fff"><path d="M15.724 4.22A4.313 4.313 0 0 0 12.192.814a4.269 4.269 0 0 0-3.622 1.13.837.837 0 0 1-1.14 0 4.272 4.272 0 0 0-6.38 5.602l5.4 7.4a1.467 1.467 0 0 0 2.1 0l5.4-7.4a4.3 4.3 0 0 0 1.774-3.326z"/></svg>
+               </div>`
+            : p.img
+                ? `<img class="card-img" src="${encodeImgPath(p.img)}" alt="${escHtml(p.name)}" onerror="handleImgError(this)">`
+                : `<div class="card-img" style="background:#333;display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:1;border-radius:6px;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="#b3b3b3"><path d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v12.167a3.5 3.5 0 1 1-3.5-3.5H6V3z"/></svg>
+                   </div>`;
+
+        const subtitleText = p.subtitle || `Playlist \u00B7 Jack Dutton`;
+
+        card.innerHTML = `
+            <div class="card-img-wrapper">
+                ${imgHtml}
+                <button class="card-play-btn" onclick="event.stopPropagation(); window.open('${p.url}', '_blank')">
+                    <svg viewBox="0 0 24 24"><path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"/></svg>
+                </button>
+            </div>
+            <div class="card-title" title="${escHtml(p.name)}">${escHtml(p.name)}</div>
+            <div class="card-subtitle">${escHtml(subtitleText)}</div>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+// Render sidebar
+function renderSidebar() {
+    const list = document.getElementById('sidebarList');
+    list.innerHTML = '';
+    playlists.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'library-item' + (currentPlaylist === p ? ' active' : '');
+        item.onclick = () => openPlaylist(p);
+
+        const imgHtml = p.isLiked
+            ? `<div class="library-item-img liked-songs-gradient" style="display:flex;align-items:center;justify-content:center;border-radius:4px;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="#fff"><path d="M15.724 4.22A4.313 4.313 0 0 0 12.192.814a4.269 4.269 0 0 0-3.622 1.13.837.837 0 0 1-1.14 0 4.272 4.272 0 0 0-6.38 5.602l5.4 7.4a1.467 1.467 0 0 0 2.1 0l5.4-7.4a4.3 4.3 0 0 0 1.774-3.326z"/></svg>
+               </div>`
+            : `<img class="library-item-img" src="${p.img ? encodeImgPath(p.img) : ''}" alt="" onerror="handleImgError(this)">`;
+
+        item.innerHTML = `
+            ${imgHtml}
+            <div class="library-item-info">
+                <div class="library-item-title">${escHtml(p.name)}</div>
+                <div class="library-item-meta">Playlist \u00B7 Jack Dutton</div>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+}
+
+// Open playlist detail
+async function openPlaylist(p) {
+    currentPlaylist = p;
+    currentView = 'playlist';
+
+    document.getElementById('homeView').classList.add('hidden');
+    document.getElementById('playlistView').classList.remove('hidden');
+    document.getElementById('backBtn').disabled = false;
+
+    await renderPlaylistDetail(p);
+    renderSidebar();
+
+    document.getElementById('playlistView').scrollTop = 0;
+}
+
+// Go home
+function goHome() {
+    currentView = 'home';
+    currentPlaylist = null;
+
+    document.getElementById('homeView').classList.remove('hidden');
+    document.getElementById('playlistView').classList.add('hidden');
+    document.getElementById('backBtn').disabled = true;
+
+    renderSidebar();
+}
+
+// Render playlist detail
+async function renderPlaylistDetail(p) {
+    const header = document.getElementById('playlistHeader');
+    const tracks = document.getElementById('playlistTracks');
+
+    const titleClass = p.name.length > 30 ? 'very-long-title' : p.name.length > 18 ? 'long-title' : '';
+
+    const imgHtml = p.isLiked
+        ? `<div class="playlist-detail-img liked-songs-gradient" style="display:flex;align-items:center;justify-content:center;">
+            <svg width="64" height="64" viewBox="0 0 16 16" fill="#fff"><path d="M15.724 4.22A4.313 4.313 0 0 0 12.192.814a4.269 4.269 0 0 0-3.622 1.13.837.837 0 0 1-1.14 0 4.272 4.272 0 0 0-6.38 5.602l5.4 7.4a1.467 1.467 0 0 0 2.1 0l5.4-7.4a4.3 4.3 0 0 0 1.774-3.326z"/></svg>
+           </div>`
+        : p.img
+            ? `<img class="playlist-detail-img" src="${encodeImgPath(p.img)}" alt="${escHtml(p.name)}" onerror="handleImgError(this)">`
+            : `<div class="playlist-detail-img" style="background:#333;display:flex;align-items:center;justify-content:center;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="#b3b3b3"><path d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v12.167a3.5 3.5 0 1 1-3.5-3.5H6V3z"/></svg>
+               </div>`;
+
+    const descHtml = p.description
+        ? `<div class="playlist-description">${escHtml(p.description)}</div>`
+        : p.subtitle
+            ? `<div class="playlist-description">${escHtml(p.subtitle)}</div>`
+            : '';
+
+    header.innerHTML = `
+        <div class="playlist-header-bg" style="background: linear-gradient(180deg, ${getHeaderColor(p)} 0%, var(--bg-elevated) 100%);"></div>
+        ${imgHtml}
+        <div class="playlist-detail-info">
+            <div class="playlist-type">Playlist</div>
+            <h1 class="playlist-detail-title ${titleClass}">${escHtml(p.name)}</h1>
+            ${descHtml}
+            <div class="playlist-meta">
+                <span class="playlist-meta-owner">Jack Dutton</span>
+                <span class="playlist-meta-dot">\u00B7</span>
+                <span class="playlist-meta-detail">${p.songs} song${p.songs !== 1 ? 's' : ''}${p.date ? ', ' + formatDate(p.date) : ''}</span>
+            </div>
+        </div>
+    `;
+
+    // Controls + loading placeholder
+    tracks.innerHTML = `
+        <div class="playlist-controls">
+            <button class="play-large-btn" onclick="window.open('${p.url}', '_blank')">
+                <svg viewBox="0 0 24 24"><path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"/></svg>
+            </button>
+        </div>
+        <div class="track-loading" style="padding:0 32px;color:var(--text-secondary);font-size:14px;">Loading tracks...</div>
+    `;
+
+    // Fetch and render tracks
+    try {
+        const csvFile = getCSVFilename(p.name);
+        const resp = await fetch('csvs/' + encodeURIComponent(csvFile));
+        if (!resp.ok) throw new Error('CSV not found');
+        const text = await resp.text();
+        const trackData = parseCSV(text);
+
+        // Remove loading indicator
+        const loading = tracks.querySelector('.track-loading');
+        if (loading) loading.remove();
+
+        if (trackData.length === 0) {
+            tracks.innerHTML += `
+                <a class="open-spotify-link" href="${p.url}" target="_blank" rel="noopener">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22zm5.045 15.866a.686.686 0 0 1-.943.228c-2.584-1.578-5.834-1.935-9.663-1.06a.686.686 0 0 1-.306-1.337c4.19-.958 7.786-.546 10.684 1.226a.686.686 0 0 1 .228.943zm1.346-2.995a.858.858 0 0 1-1.18.282c-2.956-1.817-7.464-2.344-10.961-1.282a.858.858 0 0 1-.496-1.641c3.995-1.212 8.962-.625 12.357 1.462a.858.858 0 0 1 .28 1.179zm.116-3.119c-3.546-2.106-9.395-2.3-12.78-1.272a1.029 1.029 0 1 1-.597-1.969c3.886-1.18 10.345-.952 14.427 1.472a1.029 1.029 0 0 1-1.05 1.769z"/></svg>
+                    Open in Spotify
+                </a>
+            `;
+            return;
+        }
+
+        // Track list header
+        const headerRow = document.createElement('div');
+        headerRow.className = 'track-list-header';
+        headerRow.innerHTML = `
+            <span>#</span>
+            <span>Title</span>
+            <span>Album</span>
+            <span class="col-duration">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/><path d="M8 3.25a.75.75 0 0 1 .75.75v3.25H11a.75.75 0 0 1 0 1.5H7.25V4A.75.75 0 0 1 8 3.25z"/></svg>
+            </span>
+        `;
+        tracks.appendChild(headerRow);
+
+        // Track rows
+        trackData.forEach((track, idx) => {
+            const row = document.createElement('div');
+            row.className = 'track-row';
+            row.innerHTML = `
+                <span class="track-num">${idx + 1}</span>
+                <div class="track-info">
+                    <div class="track-name-artist">
+                        <div class="track-name">${escHtml(track.name)}</div>
+                        <div class="track-artist">${escHtml(track.artist)}</div>
+                    </div>
+                </div>
+                <span class="track-album">${escHtml(track.album)}</span>
+                <span class="track-duration">${formatDuration(track.duration)}</span>
+            `;
+            tracks.appendChild(row);
+        });
+    } catch (e) {
+        // Fallback: show Open in Spotify link
+        const loading = tracks.querySelector('.track-loading');
+        if (loading) loading.remove();
+        tracks.innerHTML += `
+            <a class="open-spotify-link" href="${p.url}" target="_blank" rel="noopener">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22zm5.045 15.866a.686.686 0 0 1-.943.228c-2.584-1.578-5.834-1.935-9.663-1.06a.686.686 0 0 1-.306-1.337c4.19-.958 7.786-.546 10.684 1.226a.686.686 0 0 1 .228.943zm1.346-2.995a.858.858 0 0 1-1.18.282c-2.956-1.817-7.464-2.344-10.961-1.282a.858.858 0 0 1-.496-1.641c3.995-1.212 8.962-.625 12.357 1.462a.858.858 0 0 1 .28 1.179zm.116-3.119c-3.546-2.106-9.395-2.3-12.78-1.272a1.029 1.029 0 1 1-.597-1.969c3.886-1.18 10.345-.952 14.427 1.472a1.029 1.029 0 0 1-1.05 1.769z"/></svg>
+                Open in Spotify
+            </a>
+        `;
+    }
+}
+
+// Setup search (sidebar nav item)
+function setupSearch() {
+    document.getElementById('backBtn').addEventListener('click', goHome);
+
+    // Click Home to go home
+    document.querySelectorAll('.sidebar-nav-item')[0].addEventListener('click', () => {
+        searchTerm = '';
+        goHome();
+        renderPlaylistGrid();
+    });
+
+    // Search
+    document.querySelectorAll('.sidebar-nav-item')[1].addEventListener('click', () => {
+        // Toggle search in home view
+        goHome();
+        const homeView = document.getElementById('homeView');
+        const section = homeView.querySelector('.section');
+        let searchContainer = homeView.querySelector('.search-container');
+        if (!searchContainer) {
+            searchContainer = document.createElement('div');
+            searchContainer.className = 'search-container';
+            searchContainer.innerHTML = `
+                <div class="search-input-wrapper">
+                    <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M7 1.75a5.25 5.25 0 1 0 0 10.5 5.25 5.25 0 0 0 0-10.5zM.25 7a6.75 6.75 0 1 1 12.096 4.12l3.184 3.185a.75.75 0 1 1-1.06 1.06l-3.185-3.184A6.75 6.75 0 0 1 .25 7z"/></svg>
+                    <input class="search-input" type="text" placeholder="What do you want to listen to?" autofocus>
+                </div>
+            `;
+            section.parentElement.insertBefore(searchContainer, section);
+            searchContainer.querySelector('.search-input').addEventListener('input', (e) => {
+                searchTerm = e.target.value;
+                renderPlaylistGrid();
+            });
+        }
+        searchContainer.querySelector('.search-input').focus();
+    });
+}
+
+// Helpers
+function handleImgError(el) {
+    const wrapper = document.createElement('div');
+    wrapper.className = el.className;
+    wrapper.style.background = '#333';
+    wrapper.style.display = 'flex';
+    wrapper.style.alignItems = 'center';
+    wrapper.style.justifyContent = 'center';
+    wrapper.style.width = el.width ? el.width + 'px' : '';
+    wrapper.style.aspectRatio = el.classList.contains('card-img') ? '1' : '';
+    wrapper.style.borderRadius = el.classList.contains('card-img') ? '6px' : '4px';
+    const size = el.classList.contains('playlist-detail-img') ? 64 : 48;
+    wrapper.innerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="#b3b3b3"><path d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v12.167a3.5 3.5 0 1 1-3.5-3.5H6V3z"/></svg>`;
+    el.replaceWith(wrapper);
+}
+
+function escHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+}
+
+function encodeImgPath(path) {
+    // Split at pfps/ and encode the filename part
+    if (!path) return '';
+    const parts = path.split('/');
+    const dir = parts.slice(0, -1).join('/');
+    const file = parts[parts.length - 1];
+    return dir + '/' + encodeURIComponent(file);
+}
+
+function getHeaderColor(p) {
+    // Generate a deterministic color from playlist name
+    let hash = 0;
+    const name = p.name;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    return `hsl(${h}, 40%, 25%)`;
+}
+
+// Init on DOM ready
+document.addEventListener('DOMContentLoaded', init);
+
+// ============================================
+// YOUTUBE PLAYBACK INTEGRATION
+// ============================================
+
+const YOUTUBE_API_KEY = 'AIzaSyC0m1qpXOVu_RwavkPJ5ikgIYNH29go-gM';
+
+// Player state
+let ytPlayer = null;
+let ytPlayerExpanded = null;
+let currentQueue = [];
+let currentQueueIndex = -1;
+let isShuffled = false;
+let repeatMode = 'off'; // 'off', 'all', 'one'
+let currentVolume = 70;
+let progressUpdateInterval = null;
+let isVideoExpanded = false;
+
+// YouTube IFrame API ready callback
+window.onYouTubeIframeAPIReady = function() {
+    initYouTubePlayer();
+};
+
+function initYouTubePlayer() {
+    // Main player (small in now-playing bar)
+    ytPlayer = new YT.Player('ytPlayer', {
+        height: '100%',
+        width: '100%',
+        playerVars: {
+            autoplay: 0,
+            controls: 0,
+            modestbranding: 1,
+            rel: 0,
+            showinfo: 0,
+            fs: 0,
+            playsinline: 1
+        },
+        events: {
+            onReady: onPlayerReady,
+            onStateChange: onPlayerStateChange
+        }
+    });
+
+    // Expanded player
+    ytPlayerExpanded = new YT.Player('ytPlayerExpanded', {
+        height: '100%',
+        width: '100%',
+        playerVars: {
+            autoplay: 0,
+            controls: 0,
+            modestbranding: 1,
+            rel: 0,
+            showinfo: 0,
+            playsinline: 1
+        }
+    });
+}
+
+function onPlayerReady(event) {
+    event.target.setVolume(currentVolume);
+    updateVolumeDisplay();
+}
+
+function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.PLAYING) {
+        updatePlayPauseButton(true);
+        startProgressUpdate();
+        // Sync expanded player if active
+        if (isVideoExpanded && ytPlayerExpanded) {
+            const time = ytPlayer.getCurrentTime();
+            ytPlayerExpanded.seekTo(time, true);
+            ytPlayerExpanded.playVideo();
+        }
+    } else if (event.data === YT.PlayerState.PAUSED) {
+        updatePlayPauseButton(false);
+        stopProgressUpdate();
+        if (isVideoExpanded && ytPlayerExpanded) {
+            ytPlayerExpanded.pauseVideo();
+        }
+    } else if (event.data === YT.PlayerState.ENDED) {
+        handleTrackEnd();
+    }
+}
+
+function updatePlayPauseButton(isPlaying) {
+    const icon = document.getElementById('playPauseIcon');
+    const btn = document.getElementById('playPauseBtn');
+    if (isPlaying) {
+        // Pause icon
+        icon.innerHTML = '<path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"/>';
+        btn.title = 'Pause';
+    } else {
+        // Play icon
+        icon.innerHTML = '<path d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"/>';
+        btn.title = 'Play';
+    }
+}
+
+// Search YouTube for a track
+async function searchYouTube(trackName, artistName) {
+    const query = encodeURIComponent(`${trackName} ${artistName} official audio`);
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&maxResults=1&key=${YOUTUBE_API_KEY}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.items && data.items.length > 0) {
+            return data.items[0].id.videoId;
+        }
+        return null;
+    } catch (error) {
+        console.error('YouTube search error:', error);
+        return null;
+    }
+}
+
+// Play a track
+async function playTrack(track, queueIndex = -1) {
+    if (!ytPlayer) {
+        console.error('YouTube player not initialized');
+        return;
+    }
+
+    // Update queue index if provided
+    if (queueIndex >= 0) {
+        currentQueueIndex = queueIndex;
+    }
+
+    // Search for video
+    const videoId = await searchYouTube(track.name, track.artist);
+
+    if (!videoId) {
+        console.error('No video found for track:', track.name);
+        // Try next track
+        if (currentQueue.length > 0) {
+            playNext();
+        }
+        return;
+    }
+
+    // Load and play video
+    ytPlayer.loadVideoById(videoId);
+
+    if (isVideoExpanded && ytPlayerExpanded) {
+        ytPlayerExpanded.loadVideoById(videoId);
+    }
+
+    // Update now playing info
+    updateNowPlayingInfo(track);
+
+    // Show expand button
+    document.getElementById('expandVideoBtn').style.display = 'block';
+}
+
+// Update now playing display
+function updateNowPlayingInfo(track) {
+    const info = document.getElementById('nowPlayingInfo');
+    info.innerHTML = `
+        <div class="now-playing-track">
+            <div class="now-playing-name">${escHtml(track.name)}</div>
+            <div class="now-playing-artist">${escHtml(track.artist)}</div>
+        </div>
+    `;
+}
+
+// Play playlist
+async function playPlaylist(playlist) {
+    try {
+        const csvFile = getCSVFilename(playlist.name);
+        const resp = await fetch('csvs/' + encodeURIComponent(csvFile));
+        if (!resp.ok) {
+            console.error('Could not load playlist CSV');
+            return;
+        }
+        const text = await resp.text();
+        const tracks = parseCSV(text);
+
+        if (tracks.length === 0) {
+            console.error('No tracks in playlist');
+            return;
+        }
+
+        currentQueue = tracks;
+        currentQueueIndex = 0;
+
+        if (isShuffled) {
+            shuffleQueue();
+        }
+
+        playTrack(currentQueue[0], 0);
+    } catch (e) {
+        console.error('Error loading playlist:', e);
+    }
+}
+
+// Player controls
+function togglePlayPause() {
+    if (!ytPlayer) return;
+
+    const state = ytPlayer.getPlayerState();
+    if (state === YT.PlayerState.PLAYING) {
+        ytPlayer.pauseVideo();
+    } else {
+        ytPlayer.playVideo();
+    }
+}
+
+function playNext() {
+    if (currentQueue.length === 0) return;
+
+    if (repeatMode === 'one') {
+        ytPlayer.seekTo(0);
+        ytPlayer.playVideo();
+        return;
+    }
+
+    currentQueueIndex++;
+    if (currentQueueIndex >= currentQueue.length) {
+        if (repeatMode === 'all') {
+            currentQueueIndex = 0;
+        } else {
+            // End of queue
+            stopProgressUpdate();
+            updatePlayPauseButton(false);
+            return;
+        }
+    }
+
+    playTrack(currentQueue[currentQueueIndex], currentQueueIndex);
+}
+
+function playPrevious() {
+    if (currentQueue.length === 0) return;
+
+    // If more than 3 seconds in, restart current track
+    if (ytPlayer && ytPlayer.getCurrentTime() > 3) {
+        ytPlayer.seekTo(0);
+        return;
+    }
+
+    currentQueueIndex--;
+    if (currentQueueIndex < 0) {
+        if (repeatMode === 'all') {
+            currentQueueIndex = currentQueue.length - 1;
+        } else {
+            currentQueueIndex = 0;
+        }
+    }
+
+    playTrack(currentQueue[currentQueueIndex], currentQueueIndex);
+}
+
+function toggleShuffle() {
+    isShuffled = !isShuffled;
+    const btn = document.getElementById('shuffleBtn');
+
+    if (isShuffled) {
+        btn.style.color = 'var(--accent)';
+        if (currentQueue.length > 0) {
+            shuffleQueue();
+        }
+    } else {
+        btn.style.color = '';
+    }
+}
+
+function shuffleQueue() {
+    // Fisher-Yates shuffle, keeping current track at index 0
+    const current = currentQueue[currentQueueIndex];
+    const remaining = [...currentQueue];
+    remaining.splice(currentQueueIndex, 1);
+
+    for (let i = remaining.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [remaining[i], remaining[j]] = [remaining[j], remaining[i]];
+    }
+
+    currentQueue = [current, ...remaining];
+    currentQueueIndex = 0;
+}
+
+function toggleRepeat() {
+    const modes = ['off', 'all', 'one'];
+    const currentIndex = modes.indexOf(repeatMode);
+    repeatMode = modes[(currentIndex + 1) % modes.length];
+
+    const btn = document.getElementById('repeatBtn');
+    const svg = btn.querySelector('svg');
+
+    if (repeatMode === 'off') {
+        btn.style.color = '';
+        svg.innerHTML = '<path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5.585a1.75 1.75 0 0 1-.466 1.19l-.042.046a1.75 1.75 0 0 1-1.262.529H1.75A1.75 1.75 0 0 1 0 10.35V4.75zm3.75-2.25A2.25 2.25 0 0 0 1.5 4.75V9h13V4.75a2.25 2.25 0 0 0-2.25-2.25h-8.5zm9.684 8H2.566l4.6 3.07a1.75 1.75 0 0 0 1.668 0l4.6-3.07z"/>';
+    } else if (repeatMode === 'all') {
+        btn.style.color = 'var(--accent)';
+        svg.innerHTML = '<path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5.585a1.75 1.75 0 0 1-.466 1.19l-.042.046a1.75 1.75 0 0 1-1.262.529H1.75A1.75 1.75 0 0 1 0 10.35V4.75zm3.75-2.25A2.25 2.25 0 0 0 1.5 4.75V9h13V4.75a2.25 2.25 0 0 0-2.25-2.25h-8.5zm9.684 8H2.566l4.6 3.07a1.75 1.75 0 0 0 1.668 0l4.6-3.07z"/>';
+    } else { // 'one'
+        btn.style.color = 'var(--accent)';
+        svg.innerHTML = '<path d="M0 4.75A3.75 3.75 0 0 1 3.75 1h8.5A3.75 3.75 0 0 1 16 4.75v5.585a1.75 1.75 0 0 1-.466 1.19l-.042.046a1.75 1.75 0 0 1-1.262.529H1.75A1.75 1.75 0 0 1 0 10.35V4.75zm3.75-2.25A2.25 2.25 0 0 0 1.5 4.75V9h13V4.75a2.25 2.25 0 0 0-2.25-2.25h-8.5zm9.684 8H2.566l4.6 3.07a1.75 1.75 0 0 0 1.668 0l4.6-3.07z"/><text x="8" y="11" font-family="Inter, sans-serif" font-size="8" text-anchor="middle" fill="currentColor" font-weight="700">1</text>';
+    }
+}
+
+function handleTrackEnd() {
+    playNext();
+}
+
+// Progress bar
+function startProgressUpdate() {
+    stopProgressUpdate();
+    progressUpdateInterval = setInterval(updateProgress, 100);
+}
+
+function stopProgressUpdate() {
+    if (progressUpdateInterval) {
+        clearInterval(progressUpdateInterval);
+        progressUpdateInterval = null;
+    }
+}
+
+function updateProgress() {
+    if (!ytPlayer || ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING) return;
+
+    const current = ytPlayer.getCurrentTime();
+    const total = ytPlayer.getDuration();
+
+    if (total > 0) {
+        const percent = (current / total) * 100;
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('progressCurrent').textContent = formatDuration(current * 1000);
+        document.getElementById('progressTotal').textContent = formatDuration(total * 1000);
+    }
+}
+
+function seekTo(percent) {
+    if (!ytPlayer) return;
+    const total = ytPlayer.getDuration();
+    if (total > 0) {
+        ytPlayer.seekTo(total * percent);
+        if (isVideoExpanded && ytPlayerExpanded) {
+            ytPlayerExpanded.seekTo(total * percent);
+        }
+    }
+}
+
+// Volume control
+function setVolume(percent) {
+    currentVolume = percent;
+    if (ytPlayer) {
+        ytPlayer.setVolume(currentVolume);
+    }
+    if (ytPlayerExpanded) {
+        ytPlayerExpanded.setVolume(currentVolume);
+    }
+    updateVolumeDisplay();
+}
+
+function toggleMute() {
+    if (currentVolume > 0) {
+        setVolume(0);
+    } else {
+        setVolume(70);
+    }
+}
+
+function updateVolumeDisplay() {
+    document.getElementById('volumeFill').style.width = currentVolume + '%';
+
+    const icon = document.getElementById('volumeIcon');
+    if (currentVolume === 0) {
+        icon.innerHTML = '<path d="M13.86 5.47a.75.75 0 0 0-1.061 0l-1.47 1.47-1.47-1.47A.75.75 0 0 0 8.8 6.53L10.269 8l-1.47 1.47a.75.75 0 1 0 1.06 1.06l1.47-1.47 1.47 1.47a.75.75 0 0 0 1.06-1.06L12.39 8l1.47-1.47a.75.75 0 0 0 0-1.06z"/><path d="M10.116 1.5A.75.75 0 0 0 8.991.85l-6.925 4a3.642 3.642 0 0 0-1.33 4.967 3.639 3.639 0 0 0 1.33 1.332l6.925 4a.75.75 0 0 0 1.125-.649v-1.906a4.73 4.73 0 0 1-1.5-.694v1.3L2.817 9.852a2.141 2.141 0 0 1-.781-2.92c.187-.324.456-.594.78-.782l5.8-3.35v1.3c.45-.313.956-.55 1.5-.694V1.5z"/>';
+    } else if (currentVolume < 50) {
+        icon.innerHTML = '<path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.433 3.14V2.81L2.817 5.95z"/>';
+    } else {
+        icon.innerHTML = '<path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.433 3.14V2.81L2.817 5.95zm10.907.098a5.828 5.828 0 0 1 0 3.304.75.75 0 1 0 1.44.416A7.328 7.328 0 0 0 15.164 8a7.328 7.328 0 0 0-1-1.868.75.75 0 1 0-1.44.416z"/>';
+    }
+}
+
+// Video expand/collapse
+function toggleVideoExpand() {
+    const overlay = document.getElementById('videoOverlay');
+    isVideoExpanded = !isVideoExpanded;
+
+    if (isVideoExpanded) {
+        overlay.classList.remove('hidden');
+        // Sync expanded player
+        if (ytPlayer && ytPlayerExpanded) {
+            const videoId = ytPlayer.getVideoData().video_id;
+            const time = ytPlayer.getCurrentTime();
+            const state = ytPlayer.getPlayerState();
+
+            ytPlayerExpanded.loadVideoById({
+                videoId: videoId,
+                startSeconds: time
+            });
+
+            if (state === YT.PlayerState.PLAYING) {
+                ytPlayerExpanded.playVideo();
+            }
+        }
+    } else {
+        overlay.classList.add('hidden');
+        if (ytPlayerExpanded) {
+            ytPlayerExpanded.pauseVideo();
+        }
+    }
+}
+
+// Wire up event listeners
+document.getElementById('playPauseBtn').addEventListener('click', togglePlayPause);
+document.getElementById('nextBtn').addEventListener('click', playNext);
+document.getElementById('prevBtn').addEventListener('click', playPrevious);
+document.getElementById('shuffleBtn').addEventListener('click', toggleShuffle);
+document.getElementById('repeatBtn').addEventListener('click', toggleRepeat);
+document.getElementById('volumeBtn').addEventListener('click', toggleMute);
+document.getElementById('expandVideoBtn').addEventListener('click', toggleVideoExpand);
+document.getElementById('closeVideoOverlay').addEventListener('click', toggleVideoExpand);
+
+// Progress bar click
+document.getElementById('progressTrack').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    seekTo(percent);
+});
+
+// Volume bar click
+document.getElementById('volumeTrack').addEventListener('click', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+    setVolume(percent);
+});
+
+// Modify track row clicks to play tracks
+function makeTrackRowsClickable() {
+    const trackRows = document.querySelectorAll('.track-row');
+    trackRows.forEach((row, index) => {
+        row.style.cursor = 'pointer';
+        row.addEventListener('click', async () => {
+            if (currentQueue.length === 0) return;
+            currentQueueIndex = index;
+            playTrack(currentQueue[index], index);
+        });
+    });
+}
+
+// Override the renderPlaylistDetail to add track click handlers
+const originalRenderPlaylistDetail = renderPlaylistDetail;
+renderPlaylistDetail = async function(p) {
+    await originalRenderPlaylistDetail(p);
+
+    // Load queue for this playlist
+    try {
+        const csvFile = getCSVFilename(p.name);
+        const resp = await fetch('csvs/' + encodeURIComponent(csvFile));
+        if (resp.ok) {
+            const text = await resp.text();
+            currentQueue = parseCSV(text);
+            makeTrackRowsClickable();
+        }
+    } catch (e) {
+        console.error('Error loading tracks:', e);
+    }
+};
+
+// Modify the large play button to play the playlist
+const setupPlaylistPlayButton = () => {
+    const observer = new MutationObserver(() => {
+        const playBtn = document.querySelector('.play-large-btn');
+        if (playBtn && currentPlaylist) {
+            playBtn.onclick = (e) => {
+                e.preventDefault();
+                playPlaylist(currentPlaylist);
+            };
+        }
+
+        const cardPlayBtns = document.querySelectorAll('.card-play-btn');
+        cardPlayBtns.forEach(btn => {
+            const card = btn.closest('.playlist-card');
+            if (card) {
+                const playlistName = card.querySelector('.card-title')?.textContent;
+                if (playlistName) {
+                    const playlist = playlists.find(p => p.name === playlistName);
+                    if (playlist) {
+                        btn.onclick = (e) => {
+                            e.stopPropagation();
+                            playPlaylist(playlist);
+                        };
+                    }
+                }
+            }
+        });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+};
+
+setupPlaylistPlayButton();
