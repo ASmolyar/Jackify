@@ -950,13 +950,13 @@ function updateNowPlayingInfo(track) {
         </div>
     `;
 
-    // Update album art
+    // Update album art (only shown on mobile via CSS)
     const albumArt = document.getElementById('nowPlayingAlbumArt');
     if (track.trackId) {
         const localPath = `album-art/${track.trackId}.jpg`;
         albumArt.src = localPath;
         albumArt.alt = track.album;
-        albumArt.style.display = 'block';
+        // Don't set inline display - let CSS handle it (hidden on desktop, shown on mobile)
     }
 
     // Update now playing bar color
@@ -1302,15 +1302,6 @@ function toggleExpandedView() {
             const colors = getExpandedGradientColors(track);
             expandedView.style.background = `linear-gradient(180deg, ${colors.top} 0%, ${colors.bottom} 100%)`;
         }
-
-        // Ensure player continues playing when expanded
-        if (ytPlayer && ytPlayer.getPlayerState) {
-            const state = ytPlayer.getPlayerState();
-            if (state === YT.PlayerState.PLAYING) {
-                // Player is playing, ensure it continues
-                setTimeout(() => ytPlayer.playVideo(), 100);
-            }
-        }
     } else {
         // Hide expanded view
         expandedView.classList.add('hidden');
@@ -1318,15 +1309,6 @@ function toggleExpandedView() {
         // Move video back to compact bar (before album art)
         nowPlayingLeft.insertBefore(nowPlayingVideoOriginal, nowPlayingLeft.firstChild.nextSibling);
         nowPlayingVideoOriginal.classList.remove('expanded-position');
-
-        // Ensure player continues playing when collapsed
-        if (ytPlayer && ytPlayer.getPlayerState) {
-            const state = ytPlayer.getPlayerState();
-            if (state === YT.PlayerState.PLAYING) {
-                // Player is playing, ensure it continues
-                setTimeout(() => ytPlayer.playVideo(), 100);
-            }
-        }
     }
 }
 
