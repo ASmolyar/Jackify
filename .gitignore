@@ -1,1 +1,6 @@
 .vercel
+album-art/
+pfps/
+node_modules/
+.env
+blob-config.json

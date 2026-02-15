@@ -1,3 +1,26 @@
+// Blob configuration
+let BLOB_BASE_URL = '';
+
+// Load blob config if available
+fetch('blob-config.json')
+    .then(res => res.json())
+    .then(config => {
+        BLOB_BASE_URL = config.BLOB_BASE_URL;
+        console.log('Using Vercel Blob storage:', BLOB_BASE_URL);
+    })
+    .catch(() => {
+        console.log('Using local images (blob-config.json not found)');
+    });
+
+// Helper to get image URL (blob or local)
+function getImageUrl(path) {
+    if (!path) return '';
+    if (BLOB_BASE_URL) {
+        return `${BLOB_BASE_URL}/${path}`;
+    }
+    return path; // fallback to local
+}
+
 // Playlist data
 const playlists = [
     { name: "Liked Songs", url: "https://open.spotify.com/collection/tracks", img: null, songs: 241, date: "2021-10-26", subtitle: null, isLiked: true },
@@ -121,12 +144,11 @@ function formatDuration(ms) {
     return `${min}:${sec.toString().padStart(2, '0')}`;
 }
 
-// Load album artwork from local folder
+// Load album artwork from blob or local folder
 function fetchAlbumArt(trackId, imgElement) {
     if (!trackId || !imgElement) return;
 
-    // Use local album art
-    imgElement.src = `album-art/${trackId}.jpg`;
+    imgElement.src = getImageUrl(`album-art/${trackId}.jpg`);
     imgElement.onload = () => {
         imgElement.style.display = 'block';
     };
@@ -536,12 +558,13 @@ function escHtml(str) {
 }
 
 function encodeImgPath(path) {
-    // Split at pfps/ and encode the filename part
+    // Split at pfps/ and encode the filename part, then use blob URL if available
     if (!path) return '';
     const parts = path.split('/');
     const dir = parts.slice(0, -1).join('/');
     const file = parts[parts.length - 1];
-    return dir + '/' + encodeURIComponent(file);
+    const encodedPath = dir + '/' + encodeURIComponent(file);
+    return getImageUrl(encodedPath);
 }
 
 function getHeaderColor(p) {
