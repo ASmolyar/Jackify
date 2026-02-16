@@ -40,10 +40,10 @@ const playlists = [
     { name: "Liked Songs", url: "https://open.spotify.com/collection/tracks", img: "pfps/Liked Songs.jpeg", songs: 241, date: "2025-12-18", subtitle: null },
     { name: "On Repeat", url: "https://open.spotify.com/playlist/49YeV4mj1uXMMi8FIu97V7", img: "pfps/On Repeat.jpeg", songs: 30, date: "2025-12-18", subtitle: null, description: "This playlist was collected posthumously.", category: "madeForYou", author: "Spotify" },
     { name: "Repeat Rewind", url: "https://open.spotify.com/playlist/2H4u1iNige1NX86pEWBcPv", img: "pfps/Repeat Rewind.jpg", songs: 30, date: "2025-12-18", subtitle: null, description: "This playlist was collected posthumously.", category: "madeForYou", author: "Spotify" },
-    { name: "Your Top Songs 2022", url: "https://open.spotify.com/playlist/0yhPPOU0ZTLELil0deZEiH", img: "pfps/Your Top Songs 2022.jpeg", songs: 101, date: "2022-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
-    { name: "Your Top Songs 2023", url: "https://open.spotify.com/playlist/7qt2dWTQGyxGgamEvn8H0R", img: "pfps/Your Top Songs 2023.jpg", songs: 100, date: "2023-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
-    { name: "Your Top Songs 2024", url: "https://open.spotify.com/playlist/51WeFWEG5W7RuoB9q4v83q", img: "pfps/Your Top Songs 2024.jpeg", songs: 100, date: "2024-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
-    { name: "Your Top Songs 2025", url: "https://open.spotify.com/playlist/2kG3P3jLUlualM0r8oZ1Ch", img: "pfps/Your Top Songs 2025.jpeg", songs: 100, date: "2025-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
+    { name: "Jack's Top Songs 2022", url: "https://open.spotify.com/playlist/0yhPPOU0ZTLELil0deZEiH", img: "pfps/Jack's Top Songs 2022.jpeg", songs: 101, date: "2022-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
+    { name: "Jack's Top Songs 2023", url: "https://open.spotify.com/playlist/7qt2dWTQGyxGgamEvn8H0R", img: "pfps/Jack's Top Songs 2023.jpg", songs: 100, date: "2023-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
+    { name: "Jack's Top Songs 2024", url: "https://open.spotify.com/playlist/51WeFWEG5W7RuoB9q4v83q", img: "pfps/Jack's Top Songs 2024.jpeg", songs: 100, date: "2024-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
+    { name: "Jack's Top Songs 2025", url: "https://open.spotify.com/playlist/2kG3P3jLUlualM0r8oZ1Ch", img: "pfps/Jack's Top Songs 2025.jpeg", songs: 100, date: "2025-12-01", subtitle: null, category: "madeForYou", author: "Spotify" },
     { name: "it just means more", url: "https://open.spotify.com/playlist/5sPfoo3F9LwNsq1pRNFjGR", img: "pfps/it just means more.jpeg", songs: 6, date: "2024-05-16", subtitle: null },
     { name: "night into day", url: "https://open.spotify.com/playlist/59VUVVewEo6b5jxUdvW9FJ", img: "pfps/night into day.jpeg", songs: 23, date: "2023-06-15", subtitle: null },
     { name: "Spring '22", url: "https://open.spotify.com/playlist/4mgL620ffxj4VYuviRl4F8", img: "pfps/Spring ‘22.jpeg", songs: 81, date: "2022-04-01", subtitle: null },
@@ -166,7 +166,7 @@ async function fetchAlbumArt(trackId, imgElement) {
     imgElement.src = localPath;
 
     imgElement.onload = () => {
-        imgElement.style.display = 'block';
+        imgElement.classList.remove('skeleton');
     };
 
     imgElement.onerror = async () => {
@@ -178,7 +178,9 @@ async function fetchAlbumArt(trackId, imgElement) {
             const data = await response.json();
             if (data.thumbnail_url) {
                 imgElement.src = data.thumbnail_url;
-                imgElement.style.display = 'block';
+                imgElement.onload = () => {
+                    imgElement.classList.remove('skeleton');
+                };
             } else {
                 imgElement.style.display = 'none';
             }
@@ -197,10 +199,23 @@ function getCSVFilename(playlistName) {
         "Top Tracks 11/29/2021 (last 6 months)": "Top_Tracks_11292021_(last_6_months).csv",
         "Avett addiction": "Avett_addiction_.csv",
         "EZ\u{1F3AF}": "EZ\u{1F3AF}_.csv",
-        "I'm a crepe I'm a weirdough": "I’m_a_crepe_I’m_a_weirdough_.csv",
+        "I'm a crepe I'm a weirdough": "I\u2019m_a_crepe_I\u2019m_a_weirdough_.csv",
         "ript": "ript_.csv",
         "\u{1F3C4} \u{1F3B8}": "\u{1F3C4}_\u{1F3B8}_.csv",
-        "\u201Ccrackle barrel \u201D": '"crackle_barrel_".csv'
+        "\u201Ccrackle barrel \u201D": "\u201Ccrackle_barrel_\u201C.csv",
+        "Mom's Jams": "Mom\u2019s_Jams.csv",
+        "Winter '22": "Winter_\u201822.csv",
+        "Spring '22": "Spring_\u201822.csv",
+        "Early Summer '22": "Early_Summer_\u201822.csv",
+        "Late Summer '22": "Late_Summer_\u201822.csv",
+        "Boys Summer '22": "Boys_Summer_\u201822.csv",
+        "idk what they're saying but it's funky fresh (my version)": "idk_what_they\u2019re_saying_but_it\u2019s_funky_fresh_(my_version).csv",
+        "barn dancing isn't real": "barn_dancing_isn\u2019t_real.csv",
+        "textbook panderin'": "textbook_panderin\u2019.csv",
+        "Jack's Top Songs 2022": "Jack's_Top_Songs_2022.csv",
+        "Jack's Top Songs 2023": "Jack's_Top_Songs_2023.csv",
+        "Jack's Top Songs 2024": "Jack's_Top_Songs_2024.csv",
+        "Jack's Top Songs 2025": "Jack's_Top_Songs_2025.csv"
     };
     if (overrides[playlistName] !== undefined) return overrides[playlistName];
     // Convert regular apostrophes to left single quotation marks to match filenames
@@ -598,7 +613,7 @@ async function renderPlaylistDetail(p) {
             row.innerHTML = `
                 <span class="track-num">${trackNumber}</span>
                 <div class="track-info">
-                    <img class="track-img" src="" alt="" data-track-id="${track.trackId}" style="display:none;">
+                    <img class="track-img skeleton" src="" alt="" data-track-id="${track.trackId}">
                     <div class="track-name-artist">
                         <div class="track-name">${escHtml(track.name)}</div>
                         <div class="track-artist">${escHtml(formattedArtist)}</div>
