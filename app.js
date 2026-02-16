@@ -736,7 +736,7 @@ document.addEventListener('DOMContentLoaded', init);
 // YOUTUBE PLAYBACK INTEGRATION
 // ============================================
 
-const YOUTUBE_API_KEY = 'AIzaSyD0B2JvNBRFzCLW_A6DIKZvSS5JRJE-mEU';
+
 
 // Player state
 let ytPlayer = null;
@@ -913,8 +913,8 @@ async function searchYouTube(trackName, artistName) {
     }
 
     // Not in mappings or cache, search YouTube
-    const query = encodeURIComponent(`${trackName} ${artistName} official audio`);
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&maxResults=1&key=${YOUTUBE_API_KEY}`;
+    const query = `${trackName} ${artistName} official audio`;
+    const url = `/api/youtube-search?q=${encodeURIComponent(query)}`;
 
     try {
         const response = await fetch(url);

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-const YOUTUBE_API_KEY = 'AIzaSyD0B2JvNBRFzCLW_A6DIKZvSS5JRJE-mEU'; // Fallback API key
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const PLAYLISTS_DIR = '/Users/aaronsmolyar/Documents/spotify_playlists/csvs';
 const OUTPUT_FILE = './video-mappings.json';
 const DELAY_MS = 200; // Delay between requests to avoid rate limiting
