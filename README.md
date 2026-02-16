@@ -8,7 +8,7 @@ A Spotify-inspired web music player that plays Jack's playlists using YouTube in
 
 **Jack Davis Dutton** (July 12, 2005 – December 18, 2025)
 
-This project is dedicated to Jack Dutton, my best friend since 4th grade, who passed away on December 18, 2025.
+This project is dedicated to Jack Dutton, my best friend since 4th grade, who passed away on December 18, 2025 in an aviation related accident.
 
 **Jackify**— Jackify is a project to preserve the final state of his spotify account. Music was a huge part of who Jack was, and a huge part of what we shared. I'll be missing him.
 
