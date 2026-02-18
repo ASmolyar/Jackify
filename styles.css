@@ -1584,6 +1584,7 @@ body {
     .now-playing-left {
         min-width: 0;
         flex: 1;
+        overflow: hidden;
         padding: 8px 0 0 12px;
         gap: 12px;
         position: relative;
@@ -1604,6 +1605,7 @@ body {
     .now-playing-right {
         display: flex;
         align-items: center;
+        flex-shrink: 0;
         gap: 16px;
         padding: 12px 12px 12px 0;
         min-width: auto;
