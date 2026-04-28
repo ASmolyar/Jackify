@@ -846,6 +846,9 @@ function onPlayerStateChange(event) {
     } else if (event.data === YT.PlayerState.ENDED) {
         handleTrackEnd();
     }
+    // Refresh slider endpoints from the new video as soon as YT knows them,
+    // even before PLAYING fires (BUFFERING / CUED report duration too).
+    refreshProgressEndpoints();
 }
 
 function updatePlayPauseButton(isPlaying) {
@@ -992,6 +995,11 @@ async function playTrack(track, queueIndex = -1) {
 
     // Reset API error flag on successful search
     hasAPIError = false;
+
+    // Reset the slider so the previous track's duration doesn't flash while
+    // the new video is loading; refreshProgressEndpoints in onPlayerStateChange
+    // will fill it back in as soon as YT reports the new duration.
+    resetProgressDisplay();
 
     // Load and play video
     ytPlayer.loadVideoById(videoId);
@@ -1295,6 +1303,40 @@ function handleTrackEnd() {
 function startProgressUpdate() {
     stopProgressUpdate();
     progressUpdateInterval = setInterval(updateProgress, 100);
+}
+
+// Reset slider/endpoints to a fresh state — call when a new video is loaded
+// so the previous track's duration doesn't briefly linger.
+function resetProgressDisplay() {
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressCurrent').textContent = '0:00';
+    document.getElementById('progressTotal').textContent = '0:00';
+    const expFill = document.querySelector('.expanded-progress-fill');
+    if (expFill) expFill.style.width = '0%';
+    const expCur = document.getElementById('expandedProgressCurrent');
+    const expTot = document.getElementById('expandedProgressTotal');
+    if (expCur) expCur.textContent = '0:00';
+    if (expTot) expTot.textContent = '0:00';
+}
+
+// One-shot progress paint sourced from the YT player — no PLAYING gate.
+// Use this on state changes so the new video's duration appears immediately
+// (BUFFERING/CUED states usually have getDuration() available).
+function refreshProgressEndpoints() {
+    if (!ytPlayer || !ytPlayer.getDuration) return;
+    const total = ytPlayer.getDuration();
+    if (!total || total <= 0) return;
+    const current = ytPlayer.getCurrentTime ? ytPlayer.getCurrentTime() : 0;
+    const percent = (current / total) * 100;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressCurrent').textContent = formatDuration(current * 1000);
+    document.getElementById('progressTotal').textContent = formatDuration(total * 1000);
+    const expFill = document.querySelector('.expanded-progress-fill');
+    if (expFill) expFill.style.width = percent + '%';
+    const expCur = document.getElementById('expandedProgressCurrent');
+    const expTot = document.getElementById('expandedProgressTotal');
+    if (expCur) expCur.textContent = formatDuration(current * 1000);
+    if (expTot) expTot.textContent = formatDuration(total * 1000);
 }
 
 function stopProgressUpdate() {

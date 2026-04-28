@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Duration Violations Reconciler</title>
+<style>
+  :root { color-scheme: dark; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+         background: #111; color: #eee; margin: 0; padding: 1rem 1.25rem; }
+  h1 { font-size: 1.25rem; margin: 0 0 .5rem; }
+  .meta { color: #888; font-size: .85rem; margin-bottom: 1rem; }
+  .toolbar { position: sticky; top: 0; background: #111; padding: .5rem 0; border-bottom: 1px solid #333;
+             display: flex; gap: .75rem; flex-wrap: wrap; align-items: center; z-index: 5; }
+  .toolbar input, .toolbar select, .toolbar button { background: #222; color: #eee; border: 1px solid #444;
+             padding: .35rem .6rem; border-radius: .25rem; font-size: .85rem; }
+  .toolbar button { cursor: pointer; }
+  .toolbar button:hover { background: #2c2c2c; }
+  .toolbar .picks-count { margin-left: auto; color: #5cf; font-weight: 600; }
+  .violation { border: 1px solid #333; border-radius: .5rem; margin: .85rem 0; padding: .85rem 1rem; background: #181818; }
+  .violation.resolved { opacity: .45; }
+  .violation.has-pick { border-color: #2a7; box-shadow: 0 0 0 1px #2a7 inset; }
+  .v-head { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: .5rem; }
+  .v-title { font-weight: 600; }
+  .v-sub { color: #aaa; font-size: .85rem; }
+  .v-stat { font-family: ui-monospace, Menlo, monospace; color: #fc6; font-size: .85rem; white-space: nowrap; }
+  .v-playlists { color: #777; font-size: .75rem; margin-top: .15rem; }
+  .panes { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; margin-top: .75rem; }
+  @media (max-width: 900px) { .panes { grid-template-columns: 1fr; } }
+  .pane { background: #1f1f1f; border-radius: .35rem; padding: .65rem .75rem; }
+  .pane h3 { margin: 0 0 .35rem; font-size: .8rem; color: #aaa; text-transform: uppercase; letter-spacing: .05em; }
+  .player { width: 100%; aspect-ratio: 16/9; background: #000; border: 0; border-radius: .25rem; }
+  .candidates { list-style: none; padding: 0; margin: .35rem 0 0; display: grid; gap: .4rem; }
+  .candidate { display: grid; grid-template-columns: auto 1fr auto; gap: .5rem; align-items: center;
+               padding: .35rem .5rem; background: #161616; border: 1px solid #2a2a2a; border-radius: .25rem; font-size: .82rem; }
+  .candidate.picked { border-color: #2a7; background: #14241a; }
+  .candidate .vid { font-family: ui-monospace, Menlo, monospace; color: #888; font-size: .75rem; }
+  .candidate .dur { font-family: ui-monospace, Menlo, monospace; }
+  .candidate .dur.good { color: #6f6; }
+  .candidate .dur.ok { color: #fc6; }
+  .candidate .dur.bad { color: #f66; }
+  .candidate .title { color: #ddd; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .candidate .channel { color: #777; font-size: .72rem; }
+  .candidate-actions { display: flex; gap: .25rem; }
+  .candidate-actions button, .candidate-actions a { font-size: .72rem; padding: .2rem .45rem; border-radius: .2rem;
+               border: 1px solid #444; background: #222; color: #ddd; cursor: pointer; text-decoration: none; }
+  .candidate-actions button:hover, .candidate-actions a:hover { background: #2e2e2e; }
+  .candidate-actions .pick { background: #163; border-color: #2a7; color: #afc; }
+  .candidate-actions .pick.active { background: #2a7; color: #021; }
+  .pick-row { margin-top: .5rem; display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; font-size: .8rem; }
+  .pick-row input { background: #161616; color: #eee; border: 1px solid #444; border-radius: .2rem;
+                    padding: .25rem .45rem; font-family: ui-monospace, Menlo, monospace; width: 14ch; }
+  .v-actions { display: flex; gap: .35rem; }
+  .v-actions button { font-size: .72rem; padding: .25rem .5rem; border-radius: .2rem;
+                       border: 1px solid #444; background: #222; color: #ddd; cursor: pointer; }
+  .v-actions button:hover { background: #2e2e2e; }
+  .preview-row { display: flex; gap: .35rem; margin-top: .35rem; }
+  .preview-row iframe { width: 220px; height: 124px; }
+  .empty { color: #777; font-style: italic; padding: .5rem 0; }
+</style>
+</head>
+<body>
+<h1>Duration Violations Reconciler</h1>
+<div class="meta" id="meta">Loading data.json…</div>
+
+<div class="toolbar">
+  <input id="q" placeholder="filter by track / artist / playlist…" style="min-width: 18ch">
+  <select id="sort">
+    <option value="diff">Worst diff first</option>
+    <option value="diff-asc">Smallest diff first</option>
+    <option value="track">Track name</option>
+    <option value="artist">Artist name</option>
+  </select>
+  <label style="font-size:.8rem;color:#aaa;">
+    <input type="checkbox" id="hideResolved" checked> hide resolved
+  </label>
+  <label style="font-size:.8rem;color:#aaa;">
+    <input type="checkbox" id="hidePicked"> hide already-picked
+  </label>
+  <button id="export">Export picks JSON</button>
+  <button id="clear">Clear all picks</button>
+  <span class="picks-count" id="picksCount">0 picks</span>
+</div>
+
+<div id="list"></div>
+
+<script>
+const PICKS_KEY = 'violation-picks-v1';
+const RESOLVED_KEY = 'violation-resolved-v1';
+
+const fmt = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+const diffClass = d => Math.abs(d) <= 3 ? 'good' : Math.abs(d) <= 10 ? 'ok' : 'bad';
+
+let data = null;
+let picks = JSON.parse(localStorage.getItem(PICKS_KEY) || '{}');     // key -> {videoId, source}
+let resolved = new Set(JSON.parse(localStorage.getItem(RESOLVED_KEY) || '[]'));
+
+const savePicks = () => localStorage.setItem(PICKS_KEY, JSON.stringify(picks));
+const saveResolved = () => localStorage.setItem(RESOLVED_KEY, JSON.stringify([...resolved]));
+
+async function load() {
+  try {
+    const res = await fetch('data.json', { cache: 'no-store' });
+    data = await res.json();
+  } catch (e) {
+    document.getElementById('meta').textContent = 'Could not load data.json — run `node violations/generate.js` first.';
+    return;
+  }
+  const total = data.violations.length;
+  const auto = data.violations.filter(v => v.status === 'auto-resolved').length;
+  const pending = data.violations.filter(v => v.status !== 'done' && v.status !== 'auto-resolved').length;
+  const m = document.getElementById('meta');
+  m.textContent = `${total} potential violations (>${data.threshold}s vs cached scrape). `
+    + `${auto} auto-resolved (live mapping is already fine). `
+    + (pending ? `${pending} still being scraped — refresh to update.` : 'All processed.')
+    + ` Updated ${data.updatedAt || data.generatedAt}.`;
+  render();
+}
+
+function render() {
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const sort = document.getElementById('sort').value;
+  const hideResolved = document.getElementById('hideResolved').checked;
+  const hidePicked = document.getElementById('hidePicked').checked;
+
+  let rows = data.violations.slice();
+  if (q) rows = rows.filter(v =>
+    v.trackName.toLowerCase().includes(q) ||
+    v.artistName.toLowerCase().includes(q) ||
+    (v.playlists || []).some(p => p.toLowerCase().includes(q))
+  );
+  if (hideResolved) rows = rows.filter(v => !resolved.has(v.key) && v.status !== 'auto-resolved');
+  if (hidePicked)   rows = rows.filter(v => !picks[v.key]);
+
+  if (sort === 'diff')      rows.sort((a,b) => Math.abs(b.currentDiff ?? b.currentDiffCached) - Math.abs(a.currentDiff ?? a.currentDiffCached));
+  if (sort === 'diff-asc')  rows.sort((a,b) => Math.abs(a.currentDiff ?? a.currentDiffCached) - Math.abs(b.currentDiff ?? b.currentDiffCached));
+  if (sort === 'track')     rows.sort((a,b) => a.trackName.localeCompare(b.trackName));
+  if (sort === 'artist')    rows.sort((a,b) => a.artistName.localeCompare(b.artistName));
+
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+  for (const v of rows) list.appendChild(renderViolation(v));
+  const keptCount = [...resolved].filter(k => !picks[k]).length;
+  const parts = [`${Object.keys(picks).length} picks`];
+  if (keptCount) parts.push(`${keptCount} kept`);
+  document.getElementById('picksCount').textContent = parts.join(' · ');
+}
+
+function renderViolation(v) {
+  const wrap = document.createElement('div');
+  wrap.className = 'violation';
+  if (resolved.has(v.key) || v.status === 'auto-resolved') wrap.classList.add('resolved');
+  if (picks[v.key])         wrap.classList.add('has-pick');
+
+  const diff = v.currentDiff ?? v.currentDiffCached;
+  const dur  = v.currentDuration ?? v.currentDurationCached;
+
+  const head = document.createElement('div');
+  head.className = 'v-head';
+  head.innerHTML = `
+    <div>
+      <div class="v-title">${escapeHtml(v.trackName)} <span class="v-sub">— ${escapeHtml(v.artistName)}</span></div>
+      <div class="v-playlists">${(v.playlists || []).map(escapeHtml).join(' · ')}</div>
+    </div>
+    <div class="v-stat">
+      Spotify ${fmt(v.spotifyDuration)} · YT ${fmt(dur)} · diff ${diff > 0 ? '+' : ''}${diff}s
+    </div>
+  `;
+  const actions = document.createElement('div');
+  actions.className = 'v-actions';
+  const resolveBtn = document.createElement('button');
+  resolveBtn.textContent = resolved.has(v.key) ? 'Unresolve' : 'Mark resolved';
+  resolveBtn.onclick = () => {
+    if (resolved.has(v.key)) resolved.delete(v.key); else resolved.add(v.key);
+    saveResolved(); render();
+  };
+  actions.appendChild(resolveBtn);
+  head.appendChild(actions);
+  wrap.appendChild(head);
+
+  const panes = document.createElement('div');
+  panes.className = 'panes';
+
+  // Current video pane
+  const cur = document.createElement('div');
+  cur.className = 'pane';
+  cur.innerHTML = `<h3>Currently mapped — ${v.currentVideoId}</h3>`;
+  if (v.currentTitle) {
+    const t = document.createElement('div');
+    t.className = 'v-sub';
+    t.style.marginBottom = '.3rem';
+    t.textContent = `${v.currentTitle}${v.currentChannel ? ` · ${v.currentChannel}` : ''}`;
+    cur.appendChild(t);
+  }
+  cur.appendChild(makeIframe(v.currentVideoId));
+  panes.appendChild(cur);
+
+  // Candidates pane
+  const cand = document.createElement('div');
+  cand.className = 'pane';
+  cand.innerHTML = `<h3>Candidates (sorted by diff)</h3>`;
+  const ul = document.createElement('ul');
+  ul.className = 'candidates';
+  if (!v.candidates || v.candidates.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.textContent = v.status === 'done' ? 'No candidates found.' : 'Scraping in progress — refresh later.';
+    cand.appendChild(empty);
+  } else {
+    for (const c of v.candidates) ul.appendChild(renderCandidate(v, c));
+    cand.appendChild(ul);
+  }
+
+  // Manual / fallback pick row
+  const pickRow = document.createElement('div');
+  pickRow.className = 'pick-row';
+  const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${v.trackName} ${v.artistName}`)}`;
+  const currentPick = picks[v.key];
+  pickRow.innerHTML = `
+    <a href="${searchUrl}" target="_blank" rel="noopener" style="color:#5cf;">↗ Search YouTube</a>
+    <span style="color:#666;">·</span>
+    <span style="color:#aaa;">manual id:</span>
+    <input type="text" maxlength="11" placeholder="11-char video id" value="${currentPick && currentPick.source === 'manual' ? escapeAttr(currentPick.videoId) : ''}">
+    <button>Save</button>
+    ${currentPick ? `<span style="color:#5cf;">picked: ${escapeHtml(currentPick.videoId)} (${currentPick.source})</span>
+                     <button data-clear>Clear pick</button>` : ''}
+  `;
+  const input = pickRow.querySelector('input');
+  const saveBtn = pickRow.querySelector('button');
+  saveBtn.onclick = () => {
+    const id = input.value.trim();
+    if (!/^[a-zA-Z0-9_-]{11}$/.test(id)) { alert('Need an 11-char YouTube video id'); return; }
+    picks[v.key] = { videoId: id, source: 'manual', trackName: v.trackName, artistName: v.artistName };
+    savePicks(); render();
+  };
+  const clearBtn = pickRow.querySelector('[data-clear]');
+  if (clearBtn) clearBtn.onclick = () => { delete picks[v.key]; savePicks(); render(); };
+  cand.appendChild(pickRow);
+
+  panes.appendChild(cand);
+  wrap.appendChild(panes);
+  return wrap;
+}
+
+function renderCandidate(v, c) {
+  const li = document.createElement('li');
+  li.className = 'candidate';
+  const isPicked = picks[v.key] && picks[v.key].videoId === c.videoId;
+  if (isPicked) li.classList.add('picked');
+  const cls = diffClass(c.diff);
+  li.innerHTML = `
+    <span class="dur ${cls}">${fmt(c.duration)} <span style="color:#777;">(${c.diff > 0 ? '+' : ''}${c.diff}s)</span></span>
+    <span>
+      <div class="title">${escapeHtml(c.title || '(no title)')}</div>
+      <div class="channel">${escapeHtml(c.channel || '')} · <span class="vid">${c.videoId}</span></div>
+    </span>
+    <span class="candidate-actions">
+      <a href="https://youtu.be/${c.videoId}" target="_blank" rel="noopener">▶</a>
+      <button data-preview>preview</button>
+      <button class="pick ${isPicked ? 'active' : ''}">${isPicked ? '✓ picked' : 'pick'}</button>
+    </span>
+  `;
+  const previewBtn = li.querySelector('[data-preview]');
+  previewBtn.onclick = () => {
+    const existing = li.querySelector('iframe');
+    if (existing) { existing.remove(); return; }
+    const f = makeIframe(c.videoId);
+    f.style.marginTop = '.4rem';
+    f.style.gridColumn = '1 / -1';
+    li.appendChild(f);
+  };
+  const pickBtn = li.querySelector('.pick');
+  pickBtn.onclick = () => {
+    if (isPicked) delete picks[v.key];
+    else picks[v.key] = {
+      videoId: c.videoId, source: 'candidate',
+      duration: c.duration, diff: c.diff, title: c.title,
+      trackName: v.trackName, artistName: v.artistName,
+    };
+    savePicks(); render();
+  };
+  return li;
+}
+
+function makeIframe(videoId) {
+  const f = document.createElement('iframe');
+  f.className = 'player';
+  f.loading = 'lazy';
+  f.allow = 'autoplay; encrypted-media; picture-in-picture';
+  f.referrerPolicy = 'strict-origin-when-cross-origin';
+  f.src = `https://www.youtube.com/embed/${videoId}`;
+  return f;
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+document.getElementById('q').addEventListener('input', render);
+document.getElementById('sort').addEventListener('change', render);
+document.getElementById('hideResolved').addEventListener('change', render);
+document.getElementById('hidePicked').addEventListener('change', render);
+
+document.getElementById('export').addEventListener('click', () => {
+  // Include keys that were marked resolved without picking a replacement —
+  // those mean "current mapping is fine, keep it" and should be stamped on
+  // disk so they don't reappear next refresh.
+  const keptResolved = [...resolved].filter(k => !picks[k]);
+  const out = { ...picks };
+  if (keptResolved.length) out.__resolved_keep_current = keptResolved;
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'picks.json';
+  a.click();
+});
+document.getElementById('clear').addEventListener('click', () => {
+  if (!confirm('Clear all picks from local storage?')) return;
+  picks = {}; savePicks(); render();
+});
+
+load();
+</script>
+</body>
+</html>
